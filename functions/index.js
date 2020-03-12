@@ -299,8 +299,20 @@ admin.initializeApp({
 });
 
 //setup owner: the data is the info you send. Context contains the infor about yourself
-exports.setOwner = functions.https.onCall((data,context) =>{
-  return admin.auth().setCustomUserClaims(context.uid, {owner: true});
+exports.setOwner = functions.https.onRequest((req,res)=>{
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "GET");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
+    let uid = JSON.parse(req).uid;
+    admin.auth().setCustomUserClaims(uid, {owner: true});
+  }
 });
 
 /*
