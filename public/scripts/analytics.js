@@ -1,5 +1,7 @@
 google.charts.load("current", { packages: ["corechart"] });
 
+const functions = firebase.functions();
+
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 const login = document.getElementById("loginBtn");
