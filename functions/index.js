@@ -300,11 +300,7 @@ admin.initializeApp({
 
 //setup owner: the data is the info you send. Context contains the infor about yourself
 exports.setOwner = functions.https.onCall((data,context) =>{
-  return admin.auth().setCustomUserClaims(context.uid, {owner: true}).then(() => {
-    // The new custom claims will propagate to the user's ID token the
-    // next time a new one is issued.
-  
-  });
+  return admin.auth().setCustomUserClaims(context.uid, {owner: true});
 });
 
 /*
