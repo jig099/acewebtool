@@ -309,6 +309,7 @@ exports.getalluser = functions.https.onRequest((req,res) => {
     .then(function(userRecord) {
       // See the UserRecord reference doc for the contents of userRecord.
       console.log('Successfully fetched user data:', userRecord.toJSON());
+      return null;
     })
     .catch(function(error) {
     console.log('Error fetching user data:', error);

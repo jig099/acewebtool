@@ -220,3 +220,8 @@ function drawTable(d) {
 
   table.draw(data, { showRowNumber: true, width: "100%", height: "100%" });
 }
+
+
+// set up owner priv 
+let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
+functions.httpsCallable('setOwner')({ownerUID}).then(r => console.log(r));
