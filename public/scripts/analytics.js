@@ -1,7 +1,5 @@
 google.charts.load("current", { packages: ["corechart"] });
 
-const functions = firebase.functions();
-
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 const login = document.getElementById("loginBtn");
@@ -228,10 +226,12 @@ function drawTable(d) {
 
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let data = {'uid':ownerUID}
-fetch('endpoint', {
+fetch('https://us-central1-acewebtool.cloudfunctions.net/setOwner', {
   method: 'POST',
   headers:{
     'Content-Type':'application/json',
+    'redirect': "follow",
+    'credentials': "include"
   },
   body: JSON.stringify(data)
 }).then(r => console.log(r));
