@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>La jolla</title>
+        <meta charset="utf-8">
+        <link href="styles/main.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div id="outer">
+           <div id="ha">
+                <header>
+                    <h1 id="headh1" style="font-weight: bold;">La jolla</h1>  
+                    <a href="./analytics.html" target= "_blank" style="font-weight: bold; font-size: xx-large;">click me to see report!</a>
+                </header> 
+                <nav id="nav">
+                  
+                    <a href="./images.html">image</a>
+                    <a href="./form.html">form</a>
+                    <a href="./table_and_lists.html">table and lists</a>
+                    <a href="./externals.html">externals</a>
+                </nav>
+            </div>
+
+            <main>
+                <div id="main">
+                    <!--The HTML <section> element represents a standalone section — 
+                    which doesn't have a more specific semantic element to represent it — 
+                    contained within an HTML document.-->
+                    <div id="s1">
+                        <section id="section1">
+                            <h2 class="midtitle">View</h2>
+                            <img id="view" src="pictures/view1.jpg" alt="La jolla sea view1">
+                            <p>Photo by David deLeon on Unsplash</p>
+                            <p id="intro">La Jolla is a smart seaside area, known for its rugged coastline. 
+                                Trails wind past pine trees and sandstone canyons in Torrey Pines State Natural Reserve, 
+                                while the 2 courses at world-renowned Torrey Pines Golf Course sit atop sea cliffs.
+                                La Jolla Cove has sweeping ocean views, and the Shell Beach tide pools are home to anemones and crabs. 
+                                Posh boutiques and waterfront restaurants dot walkable La Jolla Village.
+                            </p>
+                        </section>
+                    </div>
+                    <div id="s2">
+                        <section id="section2">
+                            <h2 class="midtitle">Food</h2>
+                            <img id="food" src="pictures/food.jpg" alt="food in herringbone">
+                            <h3>Herringbone in La jolla</h3>
+                            <p id="herring">Experience the Flagship in the Coastal Community of La Jolla
+                            Herringbone features a “Fish Meats Field” coastal cuisine with an emphasis on 
+                            line-caught seafood and high-quality meats. As a delightful hem in the Fabric 
+                            of Social Dining, Herringbone La Jolla takes guests on an ocean-to-table 
+                            culinary excursion and social dining experience with al fresco dining, 
+                            a raw bar, exhibition kitchen and 100-year-old olive trees in the famed 
+                            beach community.
+                            </p>
+                        </section>
+                    </div>
+
+                    <div id="s3">
+                        <section id="section3">
+                            <h2 class="midtitle">Art</h2 >
+                            <img id="palm" src="pictures/palmtree.jpeg" alt="Beneath a palm tree">
+                            <h3>La Jolla poem - Beneath a Palm Tree in La Jolla </h3>
+                            <pre id="poem">
+ when perceptions are <i>twisted</i>
+deletions <i>elude</i> me
+for they and nothing can't <i>fade</i>
+since <i>all</i> is here then relayed
+                         - John Most
+                            </pre>
+                        </section>
+                    </div>
+
+                    <div id="s4">
+                        <section id="section4"> 
+                            <h2 class="midtitle">Survey</h2>
+                            <h3>How many days do you want to stay in La Jolla</h3>
+                            <form oninput="o.value = parseInt(a.value)">
+                                <label>How many days will you stay in La Jolla?</label>
+                                <input type="range" id="a" value="0">
+                                <output name="o"></output>
+                            </form>
+                        </section>
+                    </div>
+
+                    <div id="s5">
+                        <section id="section5">
+                            <h2 class="midtitle">Learn to <em>code!</em></h2 >
+                            <h3>Write "Hello, La Jolla!" in Java</h3>
+                            <code>  
+                                public static void main(String args[]){ 
+                                    System.out.println("Hello, La Jolla"); 
+                                } 
+                            </code>
+                        </section>
+                    </div>
+                </div>
+            </main>
+            
+
+            <div id="footer">
+                <footer>
+                    <details>
+                        <summary>Jiaxin Ge 2020</summary>
+                        <p id="claim">All content on this page is private</p>
+                    </details>
+                    
+                    <address>
+                        La Jolla, San Diego, CA
+                    </address>
+                </footer>
+            </div>
+
+        </div>
+        <script src="scripts/tracker.js"></script>
+        <noscript>
+            <img src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js" alt='firebase' hidden>
+            <img src="https://www.gstatic.com/firebasejs/7.8.2/firebase-firestore.js" alt='firestore' hidden>
+            <img src="https://https://us-central1-acewebtool.cloudfunctions.net/sessionize" alt='another endpoint' hidden>
+            <img src="https://https://us-central1-acewebtool.cloudfunctions.net/scriptless" alt="endpoint" hidden>
+        </noscript>
+    </body>
+    
+</html>
+
+<!-- div, address, i, code, pre, img, nav -->
+<!--The HTML <i> element represents a range of text that is set off from the normal text for some reason. 
+    Some examples include technical terms, foreign language phrases, or fictional character thoughts. 
+    It is typically displayed in italic type.-->

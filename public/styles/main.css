@@ -1,0 +1,83 @@
+h1{
+    font-family: cursive, sans-serif;
+    color:darkcyan;
+    font-size: 2cm;
+}
+
+#nav{
+    font-size: .8cm;
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    font-style: italic;
+}
+.midtitle{
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    font-style: italic;
+    font-weight:bold;
+    color:black;
+}
+
+#claim{
+    text-decoration: code;
+}
+h3{
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    text-decoration:underline;
+    font-style: italic;
+}
+#s1{
+    grid-area: a1;
+    text-align: center;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+}
+#s2{
+    grid-area: a2;
+    text-align: center;
+}
+#s3{
+    grid-area: a3;
+    text-align: center;
+}
+#s4{
+    grid-area: a4;
+    text-align: center;
+}
+#s5{
+    grid-area: a5;
+    text-align: center;
+}
+
+#ha{
+    grid-area: head;
+    text-align: center;
+}
+
+#footer{
+    grid-area:foot;
+    background-image:url("../pictures/la-jolla-cove-seal.jpg");
+}
+
+#main{
+    grid-area: main;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+        "a1 a1"
+        "a2 a3"
+        "a4 a5";
+}
+
+
+#outer{  
+    display: grid;
+    grid-gap:20px;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+        "head"
+        "main"
+        "foot";
+}
+

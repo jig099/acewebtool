@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>login</title>
+    </head>
+    <body id="id_body">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+    
+        <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+
+        <div id='login_page'>
+            <ul> 
+                <li><input id="email" class="textarea" type="email" placeholder="email"></li>
+                <li><input id="password" class="textarea" type="password" placeholder="password"></li>
+                <li><button id ="loginBtn" class="custom_button">Login</button></li>
+                <li><button id="signUpBtn" class="custom_button">SignUp</button></li>
+            </ul> 
+        </div>
+
+        <div id='analysis_page' hidden>
+           
+            <input id="speed_btn" type='button' value='Show Speed Graph'>
+            <section id="speed_section">
+                <div id="histogram" style="width: 900px; height: 500px;"></div>
+            </section>
+
+            <input id="browser_btn" type='button' value='Show Browser Graph'>
+            <section id="browser_section">
+                <div id="piechart" style="width: 900px; height: 500px;"></div>
+            </section>
+
+            <input id="engagement_btn" type='button' value='Show User Engagement Level'>
+            <section id="engagement_section">
+                <div id="table_div" style="width: 900px; height: 500px;"></div>
+            </section>
+            
+            
+
+            <input id="logout_btn" type="button" value='Logout'>
+
+        </div>
+
+        
+
+        <script src="./scripts/analytics.js"> </script>
+    </body>
+</html>

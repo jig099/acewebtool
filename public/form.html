@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>form</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <header>
+            <h1 id="headh1" style="font-weight: bold;">form</h1>
+        </header>
+        <nav id="nav">
+            <a href="index.html">back to the main page</a>
+        </nav>
+        <main>
+            <section>
+                <h2>form1</h2>
+                <form action="http://httpbin.org/post" method="POST" autocomplete="on">
+                    <!--this label is bound to the username input-->
+                    <label for="name" tabindex="0" >what is your name?(this text is tabable)</label>
+                    <input type="text" name="username" placeholder="username" id="name"><br>
+
+                    <input type="hidden" name="id" value="userId">
+
+                    <label for="ct">country</label>
+                    <input type="text" name="country" value="U.S." id="ct" readonly><br>
+
+                    <label>disabled blank</label>
+                    <input type="text" name="blank" disabled><br>
+
+                    <label>fruit you like</label><br>
+                    <input type="checkbox" name="fruit" value="apple" checked>apple<br>
+                    <input type="checkbox" name="fruit" value="banana">banana<br> 
+                    <input type="checkbox" name="fruit" value="peach">peach<br>
+
+                    <label>what is your password?</label>
+                    <input type="password" title="choose a strong pw pls" name="psw" maxlength=12><br>
+
+                    <label>when are you planning to go to La jolla?</label>
+                    <input type="date" name ="date"><br>
+
+                    <label>what is your favorite month?</label>
+                    <input type="month" name="month"><br>
+
+                    <label>what is your favorite week?</label> 
+                    <input type="week" name="week"><br> 
+
+                    <label>when do you go to bed?</label>
+                    <input type="time" name="time"><br>
+
+                    <label>Select your time zone</label>
+                    <input type="datetime-local" name="local time"><br>  
+
+                    <label>what is your number</label>
+                    <input type="number" name="phonenumber"><br>
+
+                    <label>pick your lucky number</label>
+                    <input type="range" min="1" max="10" name="range"><br>
+
+                    <label>pick your favorite color</label>
+                    <!--color is not supported in all browsers-->
+                    <input type="color" name="color"><br>
+                    
+                    <label>pick your team</label><br>
+                    <input type="radio" name="team" value="laker" required> Lakers<br>
+                    <input type="radio" name="team" value="clipper">Clipper<br>
+                    <input type="radio" name="team" value="other">Other<br>  
+
+                    <label>select a file</label><input type="file" name="uploadfile" multiple><br>
+
+                    <label>pick your charactor:</label>
+
+                    <!--The HTMLSelectElement.autofocus property is a Boolean that reflects the autofocus HTML attribute,
+                         which indicates whether the associated <select> element  
+                        will get input focus when the page loads, unless the user overrides it.-->
+                    <select name="char" autofocus>
+                        <option value="1">A</option>
+                        <option value="2">B</option>
+                        <option value="3">C</option>
+                        <option value="4">D</option>
+                    </select><br>
+
+                    <label>write a word with length 5</label>
+                    <input type="text" name="word" pattern="[A-Za-z]{5}"><br>
+
+
+                    <label>click the image to submit</label>
+                    <input type="image" alt="submit" src="pictures/submit.jpeg"><br> 
+                    <label>click here to reset</label>
+                    <input type="reset" value="reset"> 
+                </form>
+            </section>
+
+            <section>
+                <h2>form2</h2>
+                <form method="POST" action="http://httpbin.org/post">
+                    <!--group related elements in a form-->
+                    <fieldset>
+                        <!--defines a caption for fieldset-->
+                        <legend>Personalia:</legend>
+                         Name: <input type="text" name="name"><br>
+                         Email: <input type="email" name="email"><br>
+                         Date of birth: <input type="date" name="birthday"><br>
+                         Phone: <input type="tel" name="phonenumber">
+                    </fieldset><br>
+
+                    <fieldset>
+                        <legend>hobby</legend>
+                        <label>
+                            choose your team:
+                            <input name=team list=teams>
+                            <datalist id=teams>
+                            <option value="clipper">
+                            <option value="laker">
+                            </datalist>
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>How do you feel - choose a color to represent</legend>
+                        <select name="feel">
+                            <optgroup label="warm">
+                                <option value="red">Red</option>
+                                <option value="pink">Pink</option>
+                            </optgroup>
+                            <optgroup label="cold">
+                                <option value="blue">Blue</option>
+                                <option value="green">Green</option>
+                            </optgroup>
+                        </select>
+                    </fieldset>
+                    <input type="submit">
+                </form>
+            </section>
+        </main>
+        <script src="scripts/tracker.js"></script>
+        <noscript>
+            <img src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js" alt='firebase' hidden>
+            <img src="https://www.gstatic.com/firebasejs/7.8.2/firebase-firestore.js" alt='firestore' hidden>
+            <img src="https://us-central1-hw3-chi.cloudfunctions.net/sessionize" alt='another endpoint' hidden>
+            <img src="https://us-central1-hw3-chi.cloudfunctions.net/scriptless" alt="endpoint" hidden>
+        </noscript>
+    </body>
+</html>

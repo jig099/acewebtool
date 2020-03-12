@@ -1,0 +1,32 @@
+tr{
+    height:2cm;
+    widows: 2cm;
+    text-align: center;
+    font-size: larger;
+}
+.headers{
+    background-color: lightblue;
+}
+.day{
+    background-color: cornsilk;
+}
+.covewalk{
+    background-color: lightcoral;
+}
+
+.kayak{
+    background-color: lightsalmon;
+}
+
+.ucsdtour{
+    background-color: lightpink;
+}
+.dinner{
+    background-color: lightseagreen;
+}
+.nightkayak{
+    background-color: rgba(32, 136, 240, 0.596);
+}
+.rest{
+    background-color: lightyellow
+}
