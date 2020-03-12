@@ -338,6 +338,11 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
   } 
 });
 
+<<<<<<< HEAD
+//update a specific user info in the db
+//delete a user from db 
+//add a user to the db
+=======
 //add admins
 //grant admins
 //modfity admins
@@ -347,4 +352,5 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
 //getAll user 
 //remove user
 //add user 
+>>>>>>> 99e854604ebeece0956bf61c1add9c4573f841fe
 
