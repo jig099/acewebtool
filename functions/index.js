@@ -293,8 +293,33 @@ exports.getdata = functions.https.onRequest((req,res) => {
   }
 });
 
-//getting all user info from the db
-exports.getalluser = functions.https.onRequest((req,res) => {
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+  databaseURL: 'https://acewebtool.firebaseio.com'
+});
+
+//setup owner: the data is the info you send. Context contains the infor about yourself
+exports.setOwner = functions.https.onCall((data,context) =>{
+  return admin.auth().setCustomUserClaims(context.uid, {owner: true}).then(() => {
+    // The new custom claims will propagate to the user's ID token the
+    // next time a new one is issued.
+  
+  });
+});
+
+/*
+exports.setAdmin = functions.https.onCall((data,context) =>{
+  //first we need to check if this person has the right to setAdmin
+  if(!context.isOwner){
+    return{status: 'error', message: 'Not admin'}
+  }else{
+    
+  }
+});*/
+
+
+//getting all admin info from the db
+exports.getAllAdmin = functions.https.onRequest((req,res) => {
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
 
@@ -317,7 +342,19 @@ exports.getalluser = functions.https.onRequest((req,res) => {
   } 
 });
 
+<<<<<<< HEAD
 //update a specific user info in the db
 //delete a user from db 
 //add a user to the db
+=======
+//add admins
+//grant admins
+//modfity admins
+//remove admins
+
+//modify user
+//getAll user 
+//remove user
+//add user 
+>>>>>>> 99e854604ebeece0956bf61c1add9c4573f841fe
 
