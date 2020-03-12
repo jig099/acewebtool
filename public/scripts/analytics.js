@@ -225,5 +225,13 @@ function drawTable(d) {
 
 
 // set up owner priv 
+
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
-functions.httpsCallable('setOwner')({ownerUID}).then(r => console.log(r));
+let data = {'uid':ownerUID}
+fetch('endpoint', {
+  method: 'POST',
+  headers:{
+    'Content-Type':'application/json',
+  },
+  body: JSON.stringify(data)
+}).then(r => console.log(r));
