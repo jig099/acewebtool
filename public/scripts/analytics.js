@@ -27,7 +27,7 @@ login.addEventListener("click", e => {
     .then(function(response) {
       if (response.ok) {
         console.log("login success, redirecting...");
-        window.user_info = user;
+        window.user_info = JSON.parse(response.body);
         showAnalytic();
       } else {
         console.error("The username or password is incorrect");
@@ -224,11 +224,47 @@ function drawTable(d) {
 
 // set up owner priv 
 
+// let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
+// let data = {'uid':ownerUID}
+//   fetch(
+//     "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
+//     sendbody('POST', data)
+//   )
+//     .then(response => console.log(response));
+
+
+
+
+// addAdmin 
+
+// TODO DEBUG 
+
+
+let adminEmail = 'yu123@ucsd.edu'
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
-let data = {'uid':ownerUID}
+let adminPassword = '1234567'
+
+editAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.log(r));
+
+
+
+/**
+ * This is a versatile function that takes care of creation and modification of admin and user. 
+ * More specifically, it can call endpoints like addAdmin, modifyAdmin, modifyUser, addUser
+ * @param {String} currUID owner of the request
+ * @param {String} newEmail email of the new account
+ * @param {*} newPwd password of the new account
+ * @param {*} endPoint endpoint to be called
+ */
+function editAccount(currUID, newEmail, newPwd, endPoint){
+
+  let data = {'currUID':currUID, "accountInfo":{'newEmail':newEmail, 'newPwd':newPwd}};
+  let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/";
+  endPointUrl += endPoint;
   fetch(
-    "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
+    endPointUrl, 
     sendbody('POST', data)
   )
-    .then(response => console.log(response));
+  .then(r => {return r})
+}
 
