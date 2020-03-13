@@ -310,8 +310,15 @@ exports.setOwner = functions.https.onRequest((req,res)=>{
     res.set("Access-Control-Max-Age", "3600");
     res.status(204).send("");
   } else {
+<<<<<<< HEAD
     let uid = JSON.parse(req).uid;
     // admin.auth().setCustomUserClaims(uid, {owner: true});
+=======
+     let uid = JSON.parse(req.body).uid;
+     admin.auth().setCustomUserClaims(uid, {owner: true})
+     .then((response)=>{return response})
+     .catch(e => console.error(e));
+>>>>>>> a59bbb665c761d9e8bd31c1597ba21919cc92123
   }
 });
 
