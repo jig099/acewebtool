@@ -273,8 +273,8 @@ function editAccount(currUID, newEmail, newPwd, endPoint){
     {
       console.log(data)
       resolve(data);
-    });
-  // .catch(reject(Error("Error")))
+    })
+  .catch(reject(Error("Error")))
 
   })
 
