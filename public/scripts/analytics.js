@@ -226,12 +226,9 @@ function drawTable(d) {
 
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let data = {'uid':ownerUID}
-fetch('https://us-central1-acewebtool.cloudfunctions.net/setOwner', {
-  method: 'POST',
-  headers:{
-    'Content-Type':'application/json',
-    'redirect': "follow",
-    'credentials': "include"
-  },
-  body: JSON.stringify(data)
-}).then(r => console.log(r));
+  fetch(
+    "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
+    sendbody('POST', data)
+  )
+    .then(response => console.log(response));
+
