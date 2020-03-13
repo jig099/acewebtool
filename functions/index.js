@@ -238,7 +238,8 @@ exports.login = functions.https.onRequest((req, res) => {
     const promise = auth.signInWithEmailAndPassword(user.emailVal, user.pwdVal);
     promise
       .then(() => {
-        res.status(200).send("The user has successfully logged in");
+        var user = firebase.auth().currentUser; 
+        res.status(200).send(JSON.stringify(user));
         return null;
       })
       .catch(e => {
@@ -312,13 +313,43 @@ exports.setOwner = functions.https.onRequest((req,res)=>{
   } else {
      let uid = JSON.parse(req.body).uid;
      admin.auth().setCustomUserClaims(uid, {owner: true})
-     .then((response)=>{return response})
-     .catch(e => console.error(e));
+     .then(()=>{admin.auth().getUser(uid)
+      .then((userRecord)=>{console.log(userRecord);return null})
+      .catch(e=>console.log(e));
+      return null})
+     .catch(e=>console.log(e))
   }
 });
-
 /*
-exports.setAdmin = functions.https.onCall((data,context) =>{
+//add Admin - check if the user is owner JSON.parse(req.body).uid and create new user 
+exports.addAdmin = functions.https.onRequest((req,res)=>{
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
+     let uid = JSON.parse(req.body).uid;
+     admin.auth().createUser({
+       email:
+     })
+     admin.auth().setCustomUserClaims(uid, {owner: true})
+     .then(()=>{admin.auth().getUser(uid)
+      .then((userRecord)=>{console.log(userRecord);return null})
+      .catch(e=>console.log(e));
+      return null})
+     .catch(e=>console.log(e))
+  }
+});*/
+
+//addUser 
+
+//send back uid 
+/*exports.setAdmin = functions.https.onCall((data,context) =>{
   //first we need to check if this person has the right to setAdmin
   if(!context.isOwner){
     return{status: 'error', message: 'Not admin'}
