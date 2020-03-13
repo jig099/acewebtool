@@ -27,7 +27,7 @@ login.addEventListener("click", e => {
     .then(function(response) {
       if (response.ok) {
         console.log("login success, redirecting...");
-        window.user_info = user;
+        window.user_info = JSON.parse(response.body);
         showAnalytic();
       } else {
         console.error("The username or password is incorrect");
@@ -244,7 +244,7 @@ let adminEmail = 'yu123@ucsd.edu'
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let adminPassword = '1234567'
 
-editAccount(ownerUID, adminEmail, adminPassword, 'addAdmin')
+editAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.log(r));
 
 
 
