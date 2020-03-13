@@ -240,7 +240,7 @@ function drawTable(d) {
 // TODO DEBUG 
 
 
-let adminEmail = 'yu123@ucsd.edu'
+let adminEmail = 'yu1234@ucsd.edu'
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let adminPassword = '1234567'
 
@@ -258,18 +258,25 @@ editAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.l
  */
 function editAccount(currUID, newEmail, newPwd, endPoint){
 
-  let data = {'currUID':currUID, "accountInfo":{'newEmail':newEmail, 'newPwd':newPwd}};
+  return new Promise((resolve, reject) => {
+
+  let data = {'currUID':currUID, "accountInfo":{'email':newEmail, 'password':newPwd}};
   let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/";
+
   endPointUrl += endPoint;
-  fetch(
+   fetch(
     endPointUrl, 
     sendbody('POST', data)
   )
-  .then(r => 
+  .then(r => r.json())
+  .then(data => 
     {
-      console.log(r);
-      return r;
-    })
-  .catch(e => console.error(e))
+      console.log(data)
+      resolve(data);
+    });
+  // .catch(reject(Error("Error")))
+
+  })
+
 }
 

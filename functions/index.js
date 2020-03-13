@@ -320,8 +320,6 @@ exports.setOwner = functions.https.onRequest((req,res)=>{
      .catch(e=>console.log(e))
   }
 });
-/*
-//add Admin - check if the user is owner JSON.parse(req.body).uid and create new user 
 exports.addAdmin = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
@@ -333,18 +331,46 @@ exports.addAdmin = functions.https.onRequest((req,res)=>{
     res.set("Access-Control-Max-Age", "3600");
     res.status(204).send("");
   } else {
-     let uid = JSON.parse(req.body).uid;
-     admin.auth().createUser({
-       email:
+
+    let body = JSON.parse(req.body)
+     
+    // parse data
+    let userProp = body.accountInfo;
+    let currUID = body.currUID;
+    console.log('userProp is', userProp);
+
+    // check if user is owner
+    let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
+    if(currUID !== ownerUID){
+      res.status(504).send("Only owner can modify admin status");
+    }
+     
+    // create admin account
+     admin.auth().createUser(userProp)
+     .then( r => {
+       let createdAccount = r;
+       console.log(createdAccount);
+       let uid = createdAccount.uid;
+       return uid
      })
-     admin.auth().setCustomUserClaims(uid, {owner: true})
-     .then(()=>{admin.auth().getUser(uid)
-      .then((userRecord)=>{console.log(userRecord);return null})
-      .catch(e=>console.log(e));
-      return null})
-     .catch(e=>console.log(e))
+     .then(r => {
+        let uid = r
+        admin.auth().setCustomUserClaims(uid, {admin: true})
+        .then(()=>{admin.auth().getUser(r)
+          .then((userRecord)=>
+            {console.log(userRecord);
+             res.status(200).send(JSON.stringify(userRecord));
+             return null
+            })
+          .catch(e=>console.log(e));
+          return null})
+        .catch(e=>console.log(e))
+        return null;
+     })
+     .catch(e => console.error(e))
   }
-});*/
+
+})
 
 //addUser 
 
