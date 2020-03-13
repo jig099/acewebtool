@@ -265,6 +265,11 @@ function editAccount(currUID, newEmail, newPwd, endPoint){
     endPointUrl, 
     sendbody('POST', data)
   )
-  .then(r => {return r})
+  .then(r => 
+    {
+      console.log(r);
+      return r;
+    })
+  .catch(e => console.error(e))
 }
 
