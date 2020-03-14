@@ -342,7 +342,7 @@ exports.grantAdmin = functions.https.onRequest((req, res) => {
   }
 })
 
-exports.addAdmin = functions.https.onRequest((req,res)=>{
+exports.addAccount = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
 
@@ -360,39 +360,26 @@ exports.addAdmin = functions.https.onRequest((req,res)=>{
     let userProp = body.accountInfo;
     let currUID = body.currUID;
     console.log('userProp is', userProp);
+    
+    // check if user is owner or admin
+    admin.auth().verifyIdToken(currUID).then((claims) => {
+      if (claims.admin == false && claims.owner == false) {
+          res.status(504).send("Only owner/admin can add users");
+      }
+      else{
+        //create account 
+        admin.auth().createUser(userProp)
+        .then( r => {
+          let createdAccount = r;
+          console.log(createdAccount);
+          let uid = createdAccount.uid;
+          return uid
+        })
+        .catch(e => console.error(e))
+      }
+    });
 
-    // check if user is owner
-    let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
-    if(currUID !== ownerUID){
-      res.status(504).send("Only owner can modify admin status");
-    }
-     
-    // create admin account
-     admin.auth().createUser(userProp)
-     .then( r => {
-       let createdAccount = r;
-       console.log(createdAccount);
-       let uid = createdAccount.uid;
-       return uid
-     })
-     .then(r => {
-        let uid = r
-        admin.auth().setCustomUserClaims(uid, {admin: true})
-        .then(()=>{admin.auth().getUser(r)
-          .then((userRecord)=>
-            {console.log(userRecord);
-             res.status(200).send(JSON.stringify(userRecord));
-             return null
-            })
-          .catch(e=>console.log(e));
-          return null})
-        .catch(e=>console.log(e))
-        return null;
-     })
-     .catch(e => console.error(e))
-  }
-
-})
+};
 
 exports.deleteAccount = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
@@ -446,7 +433,6 @@ exports.deleteAccount = functions.https.onRequest((req,res)=>{
     }
   }
 });
-
 
 //getting all admin info from the db
 exports.getAllAdmin = functions.https.onRequest((req,res) => {
