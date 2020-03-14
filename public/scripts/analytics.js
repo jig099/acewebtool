@@ -232,7 +232,7 @@ addAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.lo
 
 /**
  * This is a versatile function that takes care of creation and modification of admin and user. 
- * More specifically, it can call endpoints like addAdmin, modifyAdmin, modifyUser, addUser
+ * More specifically, it can call endpoints like addAdmin, and addUser
  * @param {String} currUID owner of the request
  * @param {String} newEmail email of the new account
  * @param {*} newPwd password of the new account
@@ -275,19 +275,19 @@ function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
 
 /**
  * 
- * @param {string} ownerUID UID of the owner 
+ * @param {string} currUID of the owner 
  * @param {string} adminUID UID of the admin account whose access are to be modified
  * @param {boolean} modifyFlag This is a flag that specify whether grant or retract access. true means grant this account admin access, false means retract this account admin access
  */
-function modifyAdminAccess(ownerUID, adminUID , modifyFlag){
-  let data = {'uid':UID};
-  let endURL = 
+function modifyAdminAccess(currUID, adminUID , modifyFlag){
+  let data = {currUID:currUID, adminUID:adminUID, modifyFlag:modifyFlag};
 
   fetch(
-    "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
+    "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess",
     sendbody('POST', data)
   )
-    .then(response => console.log(response));
+    .then(response => response.json())
+    .then(data => console.log(data))
 
 
 

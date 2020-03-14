@@ -321,9 +321,10 @@ exports.setOwner = functions.https.onRequest((req,res)=>{
   }
 });
 
-exports.grantAdmin = functions.https.onRequest((req, res) => {
+exports.modifyAdminAccess = functions.https.onRequest((req, res) => {
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
+  let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 
   if (req.method === "OPTIONS") {
     // Send response to OPTIONS requests
@@ -332,10 +333,29 @@ exports.grantAdmin = functions.https.onRequest((req, res) => {
     res.set("Access-Control-Max-Age", "3600");
     res.status(204).send("");
   } else {
-     let uid = JSON.parse(req.body).uid;
-     admin.auth().setCustomUserClaims(uid, {admin: true})
+    // parse data
+    let reqBody = JSON.parse(req.body)
+    let currUID= reqBody.currUID
+    let adminUID = reqBody.adminUID
+    let modifyFlag = reqBody.modifyFlag
+
+    // check if the curr user has owner access
+    if(currUID !== ownerUID){
+      res.status(504).send("Only user can modify admin access.");
+    }
+
+    // the flag obj passed in setCustomUserClaims to modify admin access
+    let flagObj  = {'admin':modifyFlag}
+
+    // set the access, then pass back the userRecord
+     admin.auth().setCustomUserClaims(adminUID, flagObj)
      .then(()=>{admin.auth().getUser(uid)
-      .then((userRecord)=>{console.log(userRecord);return null})
+      .then(userRecord => 
+        {
+          console.log(userRecord);
+          res.status(200).send(JSON.stringify(userRecord));
+          return null;
+        })
       .catch(e=>console.log(e));
       return null})
      .catch(e=>console.log(e))
