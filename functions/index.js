@@ -382,7 +382,8 @@ exports.addAccount = functions.https.onRequest((req,res)=>{
     console.log('userProp is', userProp);
     
     // check if user is owner or admin
-    admin.auth().verifyIdToken(currUID).then((claims) => {
+    admin.auth().verifyIdToken(currUID)
+    .then((claims) => {
       if (claims.admin == false && claims.owner == false) {
           res.status(504).send("Only owner/admin can add users");
       }
@@ -395,11 +396,59 @@ exports.addAccount = functions.https.onRequest((req,res)=>{
           createdAccount.email = r.email;
           return createdAccount;
         })
-        .then(newAcc => res.status(200).send(JSON.stringify(newAcc)))
+        .then(newAcc => {res.status(200).send(JSON.stringify(newAcc));return null})
         .catch(e => console.error(e))
       }
-    });
-};
+    })
+    .catch(e => console.error(e))
+  }
+});
+
+//edit account
+exports.editAccount = functions.https.onRequest((req,res)=>{
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
+
+    let body = JSON.parse(req.body)
+     
+    // parse data
+    let userProp = body.accountInfo;
+    let currUID = body.currUID;
+    console.log('userProp is', userProp);
+    
+    // check if user is owner or admin
+    admin.auth().verifyIdToken(currUID)
+    .then((claims) => {
+      if (claims.admin == false && claims.owner == false) {
+        res.status(504).send("Only owner/admin can edit users");
+      }
+      else if (claims.owner == true){
+        
+      }
+      else{
+        //create account 
+        admin.auth().createUser(userProp)
+        .then( r => {
+          let createdAccount;
+          createdAccount.uid = r.uid;
+          createdAccount.email = r.email;
+          return createdAccount;
+        })
+        .then(newAcc => {res.status(200).send(JSON.stringify(newAcc));return null})
+        .catch(e => console.error(e))
+      }
+    })
+    .catch(e => console.error(e))
+  }
+}); 
 
 exports.deleteAccount = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
@@ -441,13 +490,14 @@ exports.deleteAccount = functions.https.onRequest((req,res)=>{
           .then(function() {
             console.log('Successfully deleted user');
             res.status(200).send('Successfully deleted user');
+            return null;
           })
           .catch(function(error) {
             console.log('Error deleting user:', error);
           });
         }
         else{
-          res.status(405).send("you have no rights to delete")
+          res.status(405).send("you have no rights to delete");
         }
       });
     }
@@ -478,6 +528,3 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
   } 
 });
 
-//update a specific user info in the db
-//delete a user from db 
-//add a user to the db

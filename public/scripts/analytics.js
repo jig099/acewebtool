@@ -269,7 +269,7 @@ function addAccount(currUID, newEmail, newPwd, endPoint){
  * @param {object} modifiedAccount a JSON that stores all the account info to be modified. 
  * @param {string} endPoint the endpoint that request is sending to 
  */
-function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
+//function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
 
 
 
@@ -307,10 +307,17 @@ function deleteAccount(currUID,otherUID,endPoint){
     .then(r => r.json())
     .then(data => 
       {
-        console.log(data)
+        console.log(data);
+        resolve(data);
       })
     .catch(reject(Error("Error")))
   
     })
 }
 
+/*function editAccount(currUID,otherUID,updatedInfo){
+  return new Promise ((resolve.reject)=>{
+    
+    
+  });
+}*/
