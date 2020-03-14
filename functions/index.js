@@ -321,6 +321,27 @@ exports.setOwner = functions.https.onRequest((req,res)=>{
   }
 });
 
+exports.grantAdmin = functions.https.onRequest((req, res) => {
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
+     let uid = JSON.parse(req.body).uid;
+     admin.auth().setCustomUserClaims(uid, {admin: true})
+     .then(()=>{admin.auth().getUser(uid)
+      .then((userRecord)=>{console.log(userRecord);return null})
+      .catch(e=>console.log(e));
+      return null})
+     .catch(e=>console.log(e))
+  }
+})
+
 exports.addAdmin = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
