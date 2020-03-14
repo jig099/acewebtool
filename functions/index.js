@@ -474,11 +474,12 @@ exports.deleteAccount = functions.https.onRequest((req,res)=>{
     let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 
     //if the user is owner
-    if(currUID == ownerUID){
+    if(currUID === ownerUID){
       admin.auth().deleteUser(otherUID)
       .then(function() {
         res.status(200).send('Successfully deleted user');
         console.log('Successfully deleted user');
+        return null;
       })
       .catch(function(error) {
         console.log('Error deleting user:', error);
@@ -501,7 +502,12 @@ exports.deleteAccount = functions.https.onRequest((req,res)=>{
         else{
           res.status(405).send("you have no rights to delete");
         }
-      });
+        return null;
+      })
+      .catch(e => {
+        console.error(e)
+        res.status(500).send(e);
+      })
     }
   }
 });
