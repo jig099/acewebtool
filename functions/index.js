@@ -362,7 +362,9 @@ exports.modifyAdminAccess = functions.https.onRequest((req, res) => {
   }
 })
 
-exports.addAccount = functions.https.onRequest((req,res)=>{
+
+
+exports.addAccount = functions.https.onRequest((req, res) => {
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
 
@@ -373,33 +375,36 @@ exports.addAccount = functions.https.onRequest((req,res)=>{
     res.set("Access-Control-Max-Age", "3600");
     res.status(204).send("");
   } else {
+    let body = JSON.parse(req.body);
 
-    let body = JSON.parse(req.body)
-     
     // parse data
     let userProp = body.accountInfo;
     let currUID = body.currUID;
-    console.log('userProp is', userProp);
-    
-    // check if user is owner or admin
-    admin.auth().verifyIdToken(currUID).then((claims) => {
-      if (claims.admin == false && claims.owner == false) {
-          res.status(504).send("Only owner/admin can add users");
-      }
-      else{
-        //create account 
-        admin.auth().createUser(userProp)
-        .then( r => {
-          let createdAccount = r;
-          console.log(createdAccount);
-          let uid = createdAccount.uid;
-          return uid
-        })
-        .catch(e => console.error(e))
-      }
-    });
+    console.log("userProp is", userProp);
 
-};
+    // check if user is owner or admin
+    admin
+      .auth()
+      .verifyIdToken(currUID)
+      .then(claims => {
+        if (claims.admin == false && claims.owner == false) {
+          res.status(504).send("Only owner/admin can add users");
+        } else {
+          //create account
+          admin
+            .auth()
+            .createUser(userProp)
+            .then(r => {
+              let createdAccount = r;
+              console.log(createdAccount);
+              let uid = createdAccount.uid;
+              return uid;
+            })
+            .catch(e => console.error(e));
+        }
+      });
+  }
+});
 
 exports.deleteAccount = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
@@ -458,7 +463,6 @@ exports.deleteAccount = functions.https.onRequest((req,res)=>{
 exports.getAllAdmin = functions.https.onRequest((req,res) => {
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
-
   if (req.method === "OPTIONS") {
     // Send response to OPTIONS requests
     res.set("Access-Control-Allow-Methods", "GET");
@@ -466,14 +470,26 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
     res.set("Access-Control-Max-Age", "3600");
     res.status(204).send("");
   } else {
-    admin.auth().getUserByEmail(email)
+
+    let body = req.body
+
+    let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
+    let currUID = body.currUID
+
+    if(ownerUID !== currUID){
+      res.status(500).send("Only owner can get all admin account")
+      return null
+    }
+
+    admin.auth().listUsers()
     .then(function(userRecord) {
       // See the UserRecord reference doc for the contents of userRecord.
-      console.log('Successfully fetched user data:', userRecord.toJSON());
+      console.log('Successfully fetched user data:', userRecord.users);
+      res.status(200).send(JSON.stringify(userRecord.users));
       return null;
     })
     .catch(function(error) {
-    console.log('Error fetching user data:', error);
+      console.log('Error fetching user data:', error);
     });
   } 
 });
@@ -481,4 +497,5 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
 //update a specific user info in the db
 //delete a user from db 
 //add a user to the db
+
 

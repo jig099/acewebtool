@@ -288,12 +288,8 @@ function modifyAdminAccess(currUID, adminUID , modifyFlag){
   )
     .then(response => response.json())
     .then(data => console.log(data))
-
-
-
 }
 
-<<<<<<< HEAD
 function deleteAccount(currUID,otherUID,endPoint){
   return new Promise((resolve, reject) => {
 
@@ -314,7 +310,25 @@ function deleteAccount(currUID,otherUID,endPoint){
   
     })
 }
-=======
 
->>>>>>> b2f1224037e39c8122517770212f12c54ffe1019
+function getAllAdmin(currUID){
+  return new Promise((resolve, reject) => {
+    let data = {'currUID':currUID}
+    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/getAllAdmin";
+
+    fetch(
+      endPointUrl, 
+      sendbody('POST', data)
+    )
+    .then(r => r.json())
+    .then(data => 
+      {
+        console.log(data)
+      })
+    .catch(reject(Error("Error")))
+  })
+}
+
+
+getAllAdmin(ownerUID);
 
