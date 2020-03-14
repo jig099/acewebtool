@@ -362,7 +362,7 @@ exports.modifyAdminAccess = functions.https.onRequest((req, res) => {
   }
 })
 
-exports.addAdmin = functions.https.onRequest((req,res)=>{
+exports.addAccount = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
 
@@ -380,52 +380,79 @@ exports.addAdmin = functions.https.onRequest((req,res)=>{
     let userProp = body.accountInfo;
     let currUID = body.currUID;
     console.log('userProp is', userProp);
+    
+    // check if user is owner or admin
+    admin.auth().verifyIdToken(currUID).then((claims) => {
+      if (claims.admin == false && claims.owner == false) {
+          res.status(504).send("Only owner/admin can add users");
+      }
+      else{
+        //create account 
+        admin.auth().createUser(userProp)
+        .then( r => {
+          let createdAccount = r;
+          console.log(createdAccount);
+          let uid = createdAccount.uid;
+          return uid
+        })
+        .catch(e => console.error(e))
+      }
+    });
+
+};
+
+exports.deleteAccount = functions.https.onRequest((req,res)=>{
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
+
+    let body = JSON.parse(req.body)
+     
+    // parse data
+    let otherUID = body.otherUID;
+    let currUID = body.currUID;
 
     // check if user is owner
     let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
-    if(currUID !== ownerUID){
-      res.status(504).send("Only owner can modify admin status");
+
+    //if the user is owner
+    if(currUID == ownerUID){
+      admin.auth().deleteUser(otherUID)
+      .then(function() {
+        res.status(200).send('Successfully deleted user');
+        console.log('Successfully deleted user');
+      })
+      .catch(function(error) {
+        console.log('Error deleting user:', error);
+      });
+      //check if the user is admin
     }
-     
-    // create admin account
-     admin.auth().createUser(userProp)
-     .then( r => {
-       let createdAccount = r;
-       console.log(createdAccount);
-       let uid = createdAccount.uid;
-       return uid
-     })
-     .then(r => {
-        let uid = r
-        admin.auth().setCustomUserClaims(uid, {admin: true})
-        .then(()=>{admin.auth().getUser(r)
-          .then((userRecord)=>
-            {console.log(userRecord);
-             res.status(200).send(JSON.stringify(userRecord));
-             return null
-            })
-          .catch(e=>console.log(e));
-          return null})
-        .catch(e=>console.log(e))
-        return null;
-     })
-     .catch(e => console.error(e))
+    else{
+      admin.auth().verifyIdToken(idToken).then((claims) => {
+        if (claims.admin === true) {
+          admin.auth().deleteUser(otherUID)
+          .then(function() {
+            console.log('Successfully deleted user');
+            res.status(200).send('Successfully deleted user');
+          })
+          .catch(function(error) {
+            console.log('Error deleting user:', error);
+          });
+        }
+        else{
+          res.status(405).send("you have no rights to delete")
+        }
+      });
+    }
   }
-
-})
-
-//addUser 
-
-//send back uid 
-/*exports.setAdmin = functions.https.onCall((data,context) =>{
-  //first we need to check if this person has the right to setAdmin
-  if(!context.isOwner){
-    return{status: 'error', message: 'Not admin'}
-  }else{
-    
-  }
-});*/
-
+});
 
 //getting all admin info from the db
 exports.getAllAdmin = functions.https.onRequest((req,res) => {
