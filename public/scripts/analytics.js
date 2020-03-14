@@ -222,24 +222,6 @@ function drawTable(d) {
 }
 
 
-// set up owner priv 
-
-// let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
-// let data = {'uid':ownerUID}
-//   fetch(
-//     "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
-//     sendbody('POST', data)
-//   )
-//     .then(response => console.log(response));
-
-
-
-
-// addAdmin 
-
-// TODO DEBUG 
-
-
 let adminEmail = 'yu1234@ucsd.edu'
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let adminPassword = '1234567'
@@ -274,9 +256,30 @@ function editAccount(currUID, newEmail, newPwd, endPoint){
       console.log(data)
       resolve(data);
     })
-  .catch(reject(Error("Error"))
+  .catch(reject(Error("Error")))
 
   })
 
+}
+
+function deleteAccount(currUID,otherUID,endPoint){
+  return new Promise((resolve, reject) => {
+
+    let data = {'currUID':currUID, 'otherUID':otherUID};
+    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/";
+  
+    endPointUrl += endPoint;
+     fetch(
+      endPointUrl, 
+      sendbody('POST', data)
+    )
+    .then(r => r.json())
+    .then(data => 
+      {
+        console.log(data)
+      })
+    .catch(reject(Error("Error")))
+  
+    })
 }
 
