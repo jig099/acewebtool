@@ -370,15 +370,15 @@ exports.addAccount = functions.https.onRequest((req,res)=>{
         //create account 
         admin.auth().createUser(userProp)
         .then( r => {
-          let createdAccount = r;
-          console.log(createdAccount);
-          let uid = createdAccount.uid;
-          return uid
+          let createdAccount;
+          createdAccount.uid = r.uid;
+          createdAccount.email = r.email;
+          return createdAccount;
         })
+        .then(newAcc => res.status(200).send(JSON.stringify(newAcc)))
         .catch(e => console.error(e))
       }
     });
-
 };
 
 exports.deleteAccount = functions.https.onRequest((req,res)=>{
