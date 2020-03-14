@@ -244,7 +244,7 @@ let adminEmail = 'yu1234@ucsd.edu'
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let adminPassword = '1234567'
 
-editAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.log(r));
+addAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.log(r));
 
 
 
@@ -256,7 +256,7 @@ editAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.l
  * @param {*} newPwd password of the new account
  * @param {*} endPoint endpoint to be called
  */
-function editAccount(currUID, newEmail, newPwd, endPoint){
+function addAccount(currUID, newEmail, newPwd, endPoint){
 
   return new Promise((resolve, reject) => {
 
@@ -277,6 +277,39 @@ function editAccount(currUID, newEmail, newPwd, endPoint){
   .catch(reject(Error("Error")))
 
   })
+}
+
+// modify account
+/**
+ * Generic function that send request to modifyAdmin or modifyUser
+ * @param {string} currUID UID of the owner or admin
+ * @param {string} otherUID UID of the account to be modified
+ * @param {object} modifiedAccount a JSON that stores all the account info to be modified. 
+ * @param {string} endPoint the endpoint that request is sending to 
+ */
+function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
+
+
+
+/**
+ * 
+ * @param {string} ownerUID UID of the owner 
+ * @param {string} adminUID UID of the admin account whose access are to be modified
+ * @param {boolean} modifyFlag This is a flag that specify whether grant or retract access. true means grant this account admin access, false means retract this account admin access
+ */
+function modifyAdminAccess(ownerUID, adminUID , modifyFlag){
+  let data = {'uid':UID};
+  let endURL = 
+
+  fetch(
+    "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
+    sendbody('POST', data)
+  )
+    .then(response => console.log(response));
+
+
 
 }
+
+
 
