@@ -481,4 +481,3 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
 //update a specific user info in the db
 //delete a user from db 
 //add a user to the db
-
