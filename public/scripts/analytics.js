@@ -232,7 +232,7 @@ addAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.lo
 
 /**
  * This is a versatile function that takes care of creation and modification of admin and user. 
- * More specifically, it can call endpoints like addAdmin, and addUser
+ * More specifically, it can call endpoints like addAdmin, modifyAdmin, modifyUser, addUser
  * @param {String} currUID owner of the request
  * @param {String} newEmail email of the new account
  * @param {*} newPwd password of the new account
@@ -269,21 +269,22 @@ function addAccount(currUID, newEmail, newPwd, endPoint){
  * @param {object} modifiedAccount a JSON that stores all the account info to be modified. 
  * @param {string} endPoint the endpoint that request is sending to 
  */
-function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
+//function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
 
 
 
 /**
  * 
- * @param {string} currUID of the owner 
+ * @param {string} ownerUID UID of the owner 
  * @param {string} adminUID UID of the admin account whose access are to be modified
  * @param {boolean} modifyFlag This is a flag that specify whether grant or retract access. true means grant this account admin access, false means retract this account admin access
  */
-function modifyAdminAccess(currUID, adminUID , modifyFlag){
-  let data = {currUID:currUID, adminUID:adminUID, modifyFlag:modifyFlag};
+function modifyAdminAccess(ownerUID, adminUID , modifyFlag){
+  let data = {'uid':UID};
+  let endURL = 
 
   fetch(
-    "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess",
+    "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
     sendbody('POST', data)
   )
     .then(response => response.json())
@@ -304,7 +305,8 @@ function deleteAccount(currUID,otherUID,endPoint){
     .then(r => r.json())
     .then(data => 
       {
-        console.log(data)
+        console.log(data);
+        resolve(data);
       })
     .catch(reject(Error("Error")))
   
@@ -332,3 +334,9 @@ function getAllAdmin(currUID){
 
 getAllAdmin(ownerUID);
 
+/*function editAccount(currUID,otherUID,updatedInfo){
+  return new Promise ((resolve.reject)=>{
+    
+    
+  });
+}*/
