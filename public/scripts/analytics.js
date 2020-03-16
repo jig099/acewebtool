@@ -258,17 +258,28 @@ function addAccount(currUID, newEmail, newPwd){
 
 // modify account
 /**
- * Generic function that send request to modifyAdmin or modifyUser
+ * Generic function that send request to editAccount
  * @param {string} currUID UID of the owner or admin
  * @param {string} otherUID UID of the account to be modified
  * @param {object} modifiedAccount a JSON that stores all the account info to be modified. 
- * @param {string} endPoint the endpoint that request is sending to 
  */
-//function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
+function editAccount(currUID, otherUID, modifiedAccount){
+  let data = {'currUID':currUID, 'otherUID':otherUID, 'modifiedAccount':modifiedAccount}
+  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess"
+
+  fetch(
+    endURL, 
+    sendbody('POST', data)
+  )
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(e => console.log(e))
+}
 
 
-let adminUID = "jIQePByucTNElOMVborAS7zjzl13";
-// modifyAdminAccess(ownerUID, adminUID, false);
+}
+
+
 
 /**
  * 

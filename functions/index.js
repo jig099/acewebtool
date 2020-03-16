@@ -441,50 +441,73 @@ exports.addAccount = functions.https.onRequest((req, res) => {
 });
 
 //edit account
-// exports.editAccount = functions.https.onRequest((req,res)=>{
-//   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
-//   res.set("Access-Control-Allow-Credentials", "true");
+exports.editAccount = functions.https.onRequest((req,res)=>{
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
 
-//   if (req.method === "OPTIONS") {
-//     // Send response to OPTIONS requests
-//     res.set("Access-Control-Allow-Methods", "POST");
-//     res.set("Access-Control-Allow-Headers", "Content-Type");
-//     res.set("Access-Control-Max-Age", "3600");
-//     res.status(204).send("");
-//   } else {
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
 
-//     let body = JSON.parse(req.body)
+    let body = JSON.parse(req.body)
      
-//     // parse data
-//     let userProp = body.accountInfo;
-//     let currUID = body.currUID;
-//     console.log('userProp is', userProp);
-    
-//     // check if user is owner or admin
-//     admin.auth().verifyIdToken(currUID)
-//     .then((claims) => {
-//       if (claims.admin === false && claims.owner === false) {
-//         res.status(504).send("Only owner/admin can edit users");
-//       }
-//       else if (claims.owner == true){
+    // parse data
+    let modifiedAccount = body.modifiedAccount;
+    let currUID = body.currUID;
+    let otherUID = body.otherUID;
+
+    // owner - admin pair, currUID is owner, otherUID is admin
+    let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
+    if(ownerUID === currUID){
+      // if currUID is a owner, check if other is a admin
+      admin.auth().getUser(otherUID)
+      .then(userRecord => {
+        let otherAccess = userRecord.customClaims.admin? 'admin':'nonadmin'
+        if(otherAccess === 'admin'){
+          admin.auth().updateUser(otherUID, modifiedAccount)
+          .then(r => {
+            res.status(200).send(JSON.stringify(r))
+            return null
+          })
+        } else {
+          res.status(500).send("You do not have access to edit this account!")
+        }
+        return null
+      })
+      .catch(e => console.error(e))
+    } else {
+      // if currUID is not a owner, check if it is admin
+      admin.auth().getUser(currUID)
+      .then(r => {
+        let currAccess = r.customClaims.admin ? 'admin' : 'nonadmin'
+        admin.auth().getUser(otherUID)
+        .then(r => {
+          let otherAccess = r.customClaims.admin ? 'admin' : 'nonadmin'
+          // if curr is admin, other is user, then we are gold
+          if(currAccess === 'admin' && otherAccess === 'nonadmin'){
+            admin.auth().updateUser(otherUID, modifiedAccount)
+            .then(r => {
+              res.status(200).send(JSON.stringify(r))
+              return null;
+            })
+            .catch(e => console.error(e))
+          } else {
+            res.status(500).send("You do not have access to edit this account!")
+          }
+          return null
+        })
+        .catch(e => console.error(e))
         
-//       }
-//       else{
-//         //create account 
-//         admin.auth().createUser(userProp)
-//         .then( r => {
-//           let createdAccount;
-//           createdAccount.uid = r.uid;
-//           createdAccount.email = r.email;
-//           return createdAccount;
-//         })
-//         .then(newAcc => {res.status(200).send(JSON.stringify(newAcc));return null})
-//         .catch(e => console.error(e))
-//       }
-//     })
-//     .catch(e => console.error(e))
-//   }
-// }); 
+        return null
+      })
+      .catch(e => console.error(e))
+    }
+  }
+}); 
 
 exports.deleteAccount = functions.https.onRequest((req,res)=>{
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
@@ -638,7 +661,6 @@ exports.getAllUser= functions.https.onRequest((req,res) => {
     .catch(function(error) {
       console.log('Error fetching user data:', error);
     });
-
       }
       return null;
     })
