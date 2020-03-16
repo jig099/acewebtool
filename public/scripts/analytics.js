@@ -222,30 +222,26 @@ function drawTable(d) {
 }
 
 
-let adminEmail = 'yu1234@ucsd.edu'
+let adminEmail = 'yu123456@ucsd.edu'
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let adminPassword = '1234567'
 
-addAccount(ownerUID, adminEmail, adminPassword, 'addAdmin').then(r => console.log(r));
 
 
 
 /**
- * This is a versatile function that takes care of creation and modification of admin and user. 
- * More specifically, it can call endpoints like addAdmin, modifyAdmin, modifyUser, addUser
+ * This is a versatile function that takes care of creation of a user account
  * @param {String} currUID owner of the request
  * @param {String} newEmail email of the new account
  * @param {*} newPwd password of the new account
- * @param {*} endPoint endpoint to be called
  */
-function addAccount(currUID, newEmail, newPwd, endPoint){
+function addAccount(currUID, newEmail, newPwd){
 
   return new Promise((resolve, reject) => {
 
   let data = {'currUID':currUID, "accountInfo":{'email':newEmail, 'password':newPwd}};
-  let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/";
+  let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/addAccount";
 
-  endPointUrl += endPoint;
    fetch(
     endPointUrl, 
     sendbody('POST', data)
@@ -256,8 +252,7 @@ function addAccount(currUID, newEmail, newPwd, endPoint){
       console.log(data)
       resolve(data);
     })
-  .catch(reject(Error("Error")))
-
+  .catch(e => console.error(e));
   })
 }
 
@@ -272,6 +267,8 @@ function addAccount(currUID, newEmail, newPwd, endPoint){
 //function modifyAccount(currUID, otherUID, modifiedAccount, endPoint)
 
 
+let adminUID = "jIQePByucTNElOMVborAS7zjzl13";
+// modifyAdminAccess(ownerUID, adminUID, false);
 
 /**
  * 
@@ -280,39 +277,40 @@ function addAccount(currUID, newEmail, newPwd, endPoint){
  * @param {boolean} modifyFlag This is a flag that specify whether grant or retract access. true means grant this account admin access, false means retract this account admin access
  */
 function modifyAdminAccess(ownerUID, adminUID , modifyFlag){
-  let data = {'uid':UID};
-  let endURL = 
+  let data = {'currUID':ownerUID, 'adminUID':adminUID, 'modifyFlag':modifyFlag};
+  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess"
 
   fetch(
-    "https://us-central1-acewebtool.cloudfunctions.net/setOwner",
+    endURL, 
     sendbody('POST', data)
   )
     .then(response => response.json())
     .then(data => console.log(data))
+    .catch(e => console.log(e))
 }
 
-function deleteAccount(currUID,otherUID,endPoint){
+function deleteAccount(currUID,otherUID){
   return new Promise((resolve, reject) => {
 
     let data = {'currUID':currUID, 'otherUID':otherUID};
-    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/";
+    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/deleteAccount";
   
-    endPointUrl += endPoint;
      fetch(
       endPointUrl, 
       sendbody('POST', data)
     )
-    .then(r => r.json())
-    .then(data => 
-      {
-        console.log(data);
-        resolve(data);
-      })
-    .catch(reject(Error("Error")))
-  
+    .then(r => r.text())
+    .then(text => console.log(text))
+    .catch(e => console.error(e))
     })
 }
 
+
+/**
+ * Get all the admin information 
+ * @param {string} currUID Get all the admin info
+ * @returns {array} list of admin user info
+ */
 function getAllAdmin(currUID){
   return new Promise((resolve, reject) => {
     let data = {'currUID':currUID}
@@ -322,17 +320,52 @@ function getAllAdmin(currUID){
       endPointUrl, 
       sendbody('POST', data)
     )
-    .then(r => r.json())
-    .then(data => 
-      {
+    .then(r => {
+      return r.json()
+    })
+      .then(data => {
         console.log(data)
+        return null;
       })
-    .catch(reject(Error("Error")))
+    .catch(e => reject(e.message))
   })
 }
 
 
-getAllAdmin(ownerUID);
+
+getAllUser("xJSewH7W5dOJqrHDQUn2Qefvsa12")
+/**
+ * Get all the user information 
+ * @param {string} currUID Get all the admin info
+ * @returns {array} list of normal user info
+ */
+function getAllUser(currUID){
+  return new Promise((resolve, reject) => {
+    let data = {'currUID':currUID}
+    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/getAllUser";
+
+    fetch(
+      endPointUrl, 
+      sendbody('POST', data)
+    )
+    .then(r => {
+      return r.json()
+    })
+      .then(data => {
+        console.log(data)
+        return null;
+      })
+    .catch(e => reject(e.message))
+  })
+}
+
+
+
+
+
+
+
+// getAllAdmin(ownerUID);
 
 /*function editAccount(currUID,otherUID,updatedInfo){
   return new Promise ((resolve.reject)=>{

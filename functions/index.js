@@ -341,24 +341,30 @@ exports.modifyAdminAccess = functions.https.onRequest((req, res) => {
 
     // check if the curr user has owner access
     if(currUID !== ownerUID){
-      res.status(504).send("Only user can modify admin access.");
+      res.status(504).send("Only owner can modify admin access.");
     }
 
     // the flag obj passed in setCustomUserClaims to modify admin access
-    let flagObj  = {'admin':modifyFlag}
+    let flagObj = {'admin':modifyFlag}
 
     // set the access, then pass back the userRecord
      admin.auth().setCustomUserClaims(adminUID, flagObj)
-     .then(()=>{admin.auth().getUser(uid)
-      .then(userRecord => 
+     .then(() => {
+       admin.auth().getUser(adminUID)
+       .then(userRecord => 
         {
           console.log(userRecord);
           res.status(200).send(JSON.stringify(userRecord));
           return null;
         })
-      .catch(e=>console.log(e));
-      return null})
-     .catch(e=>console.log(e))
+      .catch(e=> {
+        console.log(e)
+        res.status(504).send(e.message);
+
+      });
+      return null;
+    })
+     .catch(e=>console.log(e));
   }
 })
 
@@ -382,27 +388,55 @@ exports.addAccount = functions.https.onRequest((req, res) => {
     let currUID = body.currUID;
     console.log("userProp is", userProp);
 
-    // check if user is owner or admin
-    admin.auth().verifyIdToken(currUID)
-    .then((claims) => {
-      if (claims.admin === false && claims.owner === false) {
+    admin.auth().getUser(currUID).then(userRecord => {
+      let ownerId = userRecord.customClaims.owner
+      let adminId = userRecord.customClaims.admin
+
+      // if the current user is not a owner nor a admin, block request
+      if (!ownerId && !adminId){
           res.status(504).send("Only owner/admin can add users");
-      }
-      else{
-        //create account 
+
+      } else {
+
         admin.auth().createUser(userProp)
         .then( r => {
-          let createdAccount;
+          console.log("user record is ", r);
+          let createdAccount = {};
           createdAccount.uid = r.uid;
           createdAccount.email = r.email;
           return createdAccount;
         })
         .then(newAcc => {res.status(200).send(JSON.stringify(newAcc));return null})
         .catch(e => console.error(e))
+
       }
       return null;
     })
-    .catch(e => console.error(e))
+    .catch(e => console.log(e))
+
+
+
+    // check if user is owner or admin
+    // admin.auth().verifyIdToken(currUID)
+    // .then((claims) => {
+    //   if (claims.admin === false && claims.owner === false) {
+    //       res.status(504).send("Only owner/admin can add users");
+    //   }
+    //   else{
+    //     //create account 
+    //     admin.auth().createUser(userProp)
+    //     .then( r => {
+    //       let createdAccount;
+    //       createdAccount.uid = r.uid;
+    //       createdAccount.email = r.email;
+    //       return createdAccount;
+    //     })
+    //     .then(newAcc => {res.status(200).send(JSON.stringify(newAcc));return null})
+    //     .catch(e => console.error(e))
+    //   }
+    //   return null;
+    // })
+    // .catch(e => console.error(e))
   }
 });
 
@@ -484,29 +518,31 @@ exports.deleteAccount = functions.https.onRequest((req,res)=>{
       .catch(function(error) {
         console.log('Error deleting user:', error);
       });
-      //check if the user is admin
     }
     else{
-      admin.auth().verifyIdToken(idToken).then((claims) => {
-        if (claims.admin === true) {
-          admin.auth().deleteUser(otherUID)
-          .then(function() {
-            console.log('Successfully deleted user');
-            res.status(200).send('Successfully deleted user');
-            return null;
-          })
-          .catch(function(error) {
-            console.log('Error deleting user:', error);
-          });
-        }
-        else{
-          res.status(405).send("you have no rights to delete");
-        }
+      // check if the user is admin
+      admin.auth().getUser(currUID)
+      .then(userRecord => {
+        let userId = userRecord.customClaims.admin;
+        if(!userId){
+          res.status(504).send("you have no rights to delete");
+
+        } else {
+            admin.auth().deleteUser(otherUID)
+            .then(function() {
+              console.log('Successfully deleted user');
+              res.status(200).send('Successfully deleted user');
+              return null;
+            })
+            .catch(function(error) {
+              console.error('Error deleting user:', error);
+              res.status(504).send(JSON.stringify(error.message))
+            });
+          }
         return null;
       })
       .catch(e => {
-        console.error(e)
-        res.status(500).send(e);
+        res.status(504).send(error.message)
       })
     }
   }
@@ -524,11 +560,12 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
     res.status(204).send("");
   } else {
 
-    let body = req.body
+    let body = JSON.parse(req.body)
 
     let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
     let currUID = body.currUID
 
+    console.log(currUID)
     if(ownerUID !== currUID){
       res.status(500).send("Only owner can get all admin account")
       return null
@@ -538,12 +575,74 @@ exports.getAllAdmin = functions.https.onRequest((req,res) => {
     .then(function(userRecord) {
       // See the UserRecord reference doc for the contents of userRecord.
       console.log('Successfully fetched user data:', userRecord.users);
-      res.status(200).send(JSON.stringify(userRecord.users));
+      let userInfo = userRecord.users
+      let adminInfo = userInfo.filter(user => {
+        if(!user.customClaims){
+          return false
+        } else{
+          return user.customClaims.admin
+        }
+      })
+      res.status(200).send(JSON.stringify(adminInfo));
       return null;
     })
     .catch(function(error) {
       console.log('Error fetching user data:', error);
     });
+  } 
+});
+
+
+//getting all admin info from the db
+exports.getAllUser= functions.https.onRequest((req,res) => {
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "GET");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
+
+    let body = JSON.parse(req.body)
+    let currUID = body.currUID
+
+    admin.auth().getUser(currUID)
+    .then( userRecord => {
+      let currAccess = userRecord.customClaims.admin
+      if(!admin){
+        res.status(500).send("Only owner can get all admin account")
+        return null
+      } else {
+
+    admin.auth().listUsers()
+    .then(function(userRecord) {
+      // See the UserRecord reference doc for the contents of userRecord.
+      console.log('Successfully fetched user data:', userRecord.users);
+      let userInfo = userRecord.users
+      let adminInfo = userInfo.filter(user => {
+
+        //if custom claims is not set at all, it must be a user
+        if(!user.customClaims){
+          return true 
+        } else{
+
+          // if custom claims is set, but admin and owner is both false, then it is a user 
+          return !user.customClaims.admin && !user.customClaims.owner
+        }
+      })
+      res.status(200).send(JSON.stringify(adminInfo));
+      return null;
+    })
+    .catch(function(error) {
+      console.log('Error fetching user data:', error);
+    });
+
+      }
+      return null;
+    })
+    .catch(e => console.error(e))
   } 
 });
 
