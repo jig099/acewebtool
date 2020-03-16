@@ -277,9 +277,6 @@ function editAccount(currUID, otherUID, modifiedAccount){
 }
 
 
-}
-
-
 
 /**
  * 

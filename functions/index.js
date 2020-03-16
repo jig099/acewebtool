@@ -453,7 +453,7 @@ exports.editAccount = functions.https.onRequest((req,res)=>{
     res.status(204).send("");
   } else {
 
-    let body = JSON.parse(req.body)
+    let body = JSON.parse(req.body);
      
     // parse data
     let modifiedAccount = body.modifiedAccount;
@@ -483,11 +483,11 @@ exports.editAccount = functions.https.onRequest((req,res)=>{
       // if currUID is not a owner, check if it is admin
       admin.auth().getUser(currUID)
       .then(r => {
-        let currAccess = r.customClaims.admin ? 'admin' : 'nonadmin'
+        let currAccess = r.customClaims.admin ? 'admin' : 'nonadmin';
         admin.auth().getUser(otherUID)
         .then(r => {
-          let otherAccess = r.customClaims.admin ? 'admin' : 'nonadmin'
-          // if curr is admin, other is user, then we are gold
+          let otherAccess = r.customClaims.admin ? 'admin' : 'nonadmin';
+          // if curr is admin, other is user, then we are good
           if(currAccess === 'admin' && otherAccess === 'nonadmin'){
             admin.auth().updateUser(otherUID, modifiedAccount)
             .then(r => {
