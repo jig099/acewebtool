@@ -22,6 +22,7 @@ const deletePopup = document.getElementById("delete_popup");
 const browserAccess = document.getElementById("browserAccess");
 const engagementAccess = document.getElementById("engagementAccess");
 const speedAccess = document.getElementById("speedAccess");
+
 let currUID;
 
 function sendbody(method, body) {
@@ -409,6 +410,13 @@ function showUserList() {
     .then(userList => {
       let tr_string = "";
       userList.forEach(user => {
+        let accessArray;
+        if(user.customClaims){
+          accessArray = user.customClaims.graphAccess;
+        }
+        else{
+          accessArray=null;
+        }
         let user_li = `
       <tr>
         <td>
@@ -421,10 +429,10 @@ function showUserList() {
           ${user.metadata.creationTime}
         </td>
         <td>
-          <button type="button" class="userAccessControl" graphAccess="${JSON.stringify(user.customClaims.graphAccess)}" otherUid="${user.uid}">User Access Control</button>
+          <button type="button" class="userAccessControl" data-graphAccess="${JSON.stringify(accessArray)}" data-otherUid="${user.uid}">Access Control</button>
         </td>
         <td>
-          <button type="button" class="editUser">Edit User Info</button>
+          <button type="button" class="editUser" data-email="${user.email}">Edit User Info</button>
         </td>
         <td>
           <button type="button" class="deleteUser">Delete User</button>
@@ -447,9 +455,6 @@ function showUserList() {
               Creation Time
             </th>
             <th>
-              Data Access
-            </th>
-            <th>
               User Access Control
             </th>
             <th>
@@ -468,26 +473,53 @@ function showUserList() {
     console.log("here");
     user_page_el.innerHTML = table_string;
     user_page_el.hidden = false;
+    return null;
   })
   .then(()=>{
-    window.getElementById("user_table").addEventListener("click",(e)=>{
+    document.getElementById("user_table").addEventListener("click",(e)=>{
       if(e.target){
+        let otherUID = e.target.getAttribute('data-otherUid');
+        console.log(otherUID);
+        console.log(JSON.parse(e.target.getAttribute('data-graphAccess')));
         if(e.target.className === "userAccessControl"){
-          let accessArray = e.target.attr('graphAccess');
-          browserAccess.value = accessArray[0];
-          engagementAccess.value = accessArray[1];
-          speedAccess.value = accessArray[2];
+          if(JSON.parse(e.target.getAttribute('data-graphAccess'))!==null){
+            console.log((e.target.getAttribute('data-graphAccess')));
+            let accessArray = JSON.parse(e.target.getAttribute('data-graphAccess')); 
+            console.log("accessArray",accessArray);
+            browserAccess.value = accessArray[0];
+            engagementAccess.value = accessArray[1];
+            speedAccess.value = accessArray[2];
+          }
+          else{
+            browserAccess.value = false;
+            engagementAccess.value=false;
+            speedAccess.value=false;
+          }
           userGraphAccessPopup.open = true;
+          document.getElementById('uga_confirm_btn').addEventListener('click', e=>{
+            let data=[];
+            data[0] = browserAccess.value;
+            data[1] = engagementAccess.value;
+            data[2] = speedAccess.value;
+            modifyGraphAccess(currUID,otherUID,data);
+            editAccountPopup.open=false;
+
+          })
+          document.getElementById('uga_cancel_btn').addEventListener('click',e=>{
+            editAccountPopup.open=false;
+          })
         }
         else if (e.target.className === "editUser"){
-
+          
         }
         else if(e.target.className === "deleteUser"){
         }
+
       }
     });
     return null;
   })
+
   .catch(e=>console.log(e));
 };
 
