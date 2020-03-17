@@ -79,6 +79,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+  showAdminList();
   getData(currUID).then((data)=>{
     Object.entries(data).forEach(entry => {
       let key = entry[0];
@@ -351,13 +352,14 @@ function showAdminList(){
         </tbody>
       </table>
       `
+    let user_page_el = document.querySelector('#user_page')
+    user_page_el.innerHTML = table_string
+    user_page_el.hidden = false
+
   })
-  let user_page_el = document.querySelector('#user_page')
-  user_page_el.innerHTML(table_string)
-}
+  }
 
 
-showAdminList
 
 
 
