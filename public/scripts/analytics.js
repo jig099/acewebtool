@@ -1,4 +1,4 @@
-google.charts.load("current", { packages: ["corechart"] });
+google.charts.load("current", { packages: ["corechart","table"] });
 
 const email = document.getElementById("email");
 const password = document.getElementById("password");
@@ -7,6 +7,9 @@ const signUp = document.getElementById("signUpBtn");
 const speedSection = document.getElementById("speed_section");
 const browserSection = document.getElementById("browser_section");
 const engagementSection = document.getElementById("engagement_section");
+const histogramDiv = document.getElementById("histogram");
+const piechartDiv = document.getElementById('piechart');
+const tableDiv = document.getElementById('table_div');
 let currUID;
 
 
@@ -79,7 +82,6 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
-  showAdminList();
   getData(currUID).then((data)=>{
     Object.entries(data).forEach(entry => {
       let key = entry[0];
@@ -93,6 +95,7 @@ function showAnalytic() {
       else if(key === "engagement"){
         engagementSection.hidden = false;
         let processedDate = processData(value);
+        console.log(processedDate);
         drawTable(processedDate);
       }
       else{
@@ -118,6 +121,10 @@ logout.addEventListener("click", e => {
       //needs to clear data
       login_page_el.hidden = false;
       analysis_page_el.hidden = true;
+      histogramDiv.innerHTML = "";
+      piechartDiv.innerHTML="";
+      tableDiv.innerHTML="";
+
     })
     .catch(error => console.log("error", error));
 });
@@ -287,7 +294,7 @@ function drawTable(d) {
   data.addColumn("number", "Click Count");
   data.addColumn("number", "Visit Duration(s)");
   data.addRows(d);
-
+  console.log(typeof(d));
   var table = new google.visualization.Table(
     document.getElementById("table_div")
   );
@@ -352,14 +359,13 @@ function showAdminList(){
         </tbody>
       </table>
       `
-    let user_page_el = document.querySelector('#user_page')
-    user_page_el.innerHTML = table_string
-    user_page_el.hidden = false
-
   })
-  }
+  let user_page_el = document.querySelector('#user_page')
+  user_page_el.innerHTML(table_string)
+}
 
 
+showAdminList
 
 
 
