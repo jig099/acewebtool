@@ -29,6 +29,10 @@ login.addEventListener("click", e => {
     .then(function(response) {
       if (response.ok) {
         console.log("login success, redirecting...");
+        response.json()
+        .then( data => {
+          currUID = data.user.uid
+        })
         window.user_info = JSON.parse(response.body);
         showAnalytic();
       } else {
