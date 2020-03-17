@@ -237,15 +237,14 @@ exports.login = functions.https.onRequest((req, res) => {
     res.status(204).send("");
   } else {
     user = JSON.parse(req.body);
-    const promise = auth.signInWithEmailAndPassword(user.emailVal, user.pwdVal);
-    promise
-      .then((r) => {
-        res.status(200).send(JSON.stringify(r));
-        return null;
-      })
-      .catch(e => {
-        res.status(500).send(e.message);
-      });
+    auth.signInWithEmailAndPassword(user.emailVal, user.pwdVal)
+    .then((r) => {
+      res.status(200).send(JSON.stringify(r));
+      return null;
+    })
+    .catch(e => {
+      res.status(500).send(e.message);
+    });
   }
 });
 
