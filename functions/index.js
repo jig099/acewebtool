@@ -680,7 +680,7 @@ exports.getAllUser= functions.https.onRequest((req,res) => {
     admin.auth().getUser(currUID)
     .then( userRecord => {
       let currAccess = userRecord.customClaims.admin
-      if(!admin){
+      if(!currAccess){
         res.status(500).send("Only owner can get all admin account")
         return null
       } else {

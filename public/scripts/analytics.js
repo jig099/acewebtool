@@ -346,8 +346,8 @@ function showAdminList() {
       } else if(target.className === 'admin_edit_btn'){
 
         // copy email value from the table
-        let ea_email_el = editAccountPopup.getElementById('ea_email')
-        let ea_password_el = editAccountPopup.getElementById('ea_password')
+        let ea_email_el = document.getElementById('ea_email')
+        let ea_password_el = document.getElementById('ea_password')
         ea_email_el.value = target.parentElement.parentElement.firstElementChild.nextElementSibling.textContent.trim()
         editAccountPopup.open = true
 
@@ -386,8 +386,8 @@ function showAdminList() {
 
         d_confirm_btn_el.addEventListener('click', e => {
           // remove the list 
+
           let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
-          let target = e.target
           target.parentElement.parentElement.remove()
           deleteAccount(currUID,otherUID)
           deletePopup.open = false
@@ -493,22 +493,6 @@ function showUserList() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /************************************************
  *            Endpoint interaction function
  ***********************************************/
@@ -551,7 +535,7 @@ function editAccount(currUID, otherUID, modifiedAccount) {
     modifiedAccount: modifiedAccount
   };
   let endURL =
-    "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess";
+    "https://us-central1-acewebtool.cloudfunctions.net/editAccount";
 
   fetch(endURL, sendbody("POST", data))
     .then(response => response.json())
