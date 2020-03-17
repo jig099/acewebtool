@@ -278,6 +278,8 @@ exports.getData = functions.https.onRequest((req,res) => {
   } else {
     // check which graph should fetch according to graphAccess
     let currUID = req.query.currUID;
+    // get graphData according to what graphAccess one has
+    let dataList = {};
     admin.auth().getUser(currUID)
     .then(record => {
       let graphAccess = record.customClaims.graphAccess
@@ -285,54 +287,52 @@ exports.getData = functions.https.onRequest((req,res) => {
       if(!graphAccess){
         graphAccess = [true, true, true]
       }
-      // get graphData according to what graphAccess one has
-      let dataList = {}
-      
       // get browser data if graph Access says ok
       let docRef = db.collection('analytics').doc('browser')
-      docRef.get().then(doc => {
+      docRef.get()
+      .then(doc => {
         if(graphAccess[0] && doc.exists){
           dataList['browser'] = doc.data()
         }
-        return null
+        return null;
       })
       .then(() => {
         // get engagement data if graphAccess is true
         let docRef = db.collection('analytics').doc('engagement')
-        docRef.get().then(doc => {
+        docRef.get()
+        .then(doc => {
           if(graphAccess[1] && doc.exists){
             dataList['engagement'] = doc.data()
           }
-          return null
+          return null;
         })
-        .catch(e => console.error(e))
-        return null
-      })
-      .then(() => {
+        .then(() => {
         // get speed data if graphAccess is true
-        let docRef = db.collection('analytics').doc('speed')
-        docRef.get()
+          let docRef = db.collection('analytics').doc('speed')
+          docRef.get()
           .then(doc => {
             if(graphAccess[2] && doc.exists){
+              console.log("in speed");
               dataList['speed'] = doc.data()
             }
-            return null
+            return null;
           })
-          .catch(e => console.error(e))
-        return null
+          .then(() => {
+            // send off the data
+            console.log(dataList);
+            res.set("Content-Type", "application/JSON");
+            res.status(200).send(JSON.stringify(dataList));
+            return null;
+          })
+          .catch(e=>console.log(e))
+        })
+        .catch(e=>console.log(e));
       })
-      .then(() => {
-        // send off the data
-        res.set("Content-Type", "application/JSON");
-        res.status(200).send(JSON.stringify(dataList));
-        return null;
-      })
-      .catch(e => console.error(e))
-      return null
+      .catch(e=>console.log(e));
     })
     .catch(e=>console.log(e));
-  }
-});
+
+    
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
