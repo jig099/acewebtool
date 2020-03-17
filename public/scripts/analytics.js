@@ -311,11 +311,11 @@ function showAdminList() {
 
       // deal with toggle checkbox
       if (target.tagName === "INPUT") {
-        let dialog_box_el = document.querySelector("#admin_access_popup");
-        let confirm_btn_el = dialog_box_el.querySelector("#aa_confirm_btn");
-        let cancel_btn_el = dialog_box_el.querySelector("#aa_cancel_btn");
+        let admin_access_popup_el = document.querySelector("#admin_access_popup");
+        let confirm_btn_el = document.querySelector("#aa_confirm_btn");
+        let cancel_btn_el = document.querySelector("#aa_cancel_btn");
 
-        dialog_box_el.open = true;
+        admin_access_popup_el.open = true;
         let currCheckbox = target.checked;
 
         confirm_btn_el.addEventListener("click", e => {
@@ -334,12 +334,12 @@ function showAdminList() {
           modifyAdminAccess(currUID, otherUID, target.checked);
 
           //4)
-          dialog_box_el.open = false;
+          admin_access_popup_el.open = false;
         });
 
         cancel_btn_el.addEventListener("click", e => {
           // if cancel button is clicked, make dialog disappear
-          dialog_box_el.open = false;
+          admin_access_popup_el.open = false;
         });
 
         // if edit button is clicked, open popup
@@ -374,7 +374,32 @@ function showAdminList() {
           //5)
           editAccountPopup.open = false
         })
+
+        ea_cancel_btn_el.addEventListener('click', e => {
+          editAccountPopup.open = false
+        })
+
+      } else if(target.className === 'admin_delete_btn'){
+        deletePopup.open = true
+        const d_confirm_btn_el = document.getElementById('d_confirm_btn')
+        const d_cancel_btn_el = document.getElementById('d_cancel_btn')
+
+        d_confirm_btn_el.addEventListener('click', e => {
+          // remove the list 
+          let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
+          let target = e.target
+          target.parentElement.parentElement.remove()
+          deleteAccount(currUID,otherUID)
+          deletePopup.open = false
+        })
+
+        d_cancel_btn_el.addEventListener('click', e => {
+          deletePopup.open = false
+        })
+
+
       }
+
     });
   });
 }
