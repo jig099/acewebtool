@@ -391,9 +391,9 @@ function showAdminList(){
       } else {
 
         
-        let dialog_box_el = document.querySelector("#admin_popup")
-        let confirm_btn_el = dialog_box_el.querySelector("#confirm_btn")
-        let cancel_btn_el = dialog_box_el.querySelector("#cancel_btn")
+        let dialog_box_el = document.querySelector("#admin_access_popup")
+        let confirm_btn_el = dialog_box_el.querySelector("#aa_confirm_btn")
+        let cancel_btn_el = dialog_box_el.querySelector("#aa_cancel_btn")
 
         dialog_box_el.open = true
         let currCheckbox = target.checked
