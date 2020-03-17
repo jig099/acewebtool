@@ -1,4 +1,4 @@
-google.charts.load("current", { packages: ["corechart","table"] });
+google.charts.load("current", { packages: ["corechart", "table"] });
 
 const email = document.getElementById("email");
 const password = document.getElementById("password");
@@ -24,7 +24,6 @@ const engagementAccess = document.getElementById("engagementAccess");
 const speedAccess = document.getElementById("speedAccess");
 let currUID;
 
-
 function sendbody(method, body) {
   const requestOptions = {
     method: method,
@@ -48,17 +47,18 @@ login.addEventListener("click", e => {
       if (response.ok) {
         console.log("login success, redirecting...");
         console.log(response);
-        response.json()
-        .then( data => {
-          currUID = data.user.uid;
-          console.log(data);
-        })
-        .then(()=>{
-         showAnalytic();
+        response
+          .json()
+          .then(data => {
+            currUID = data.user.uid;
+            console.log(data);
+          })
+          .then(() => {
+            showAnalytic();
 
-         return null;
-        })
-        .catch(e => console.log(e));
+            return null;
+          })
+          .catch(e => console.log(e));
       } else {
         console.error("The username or password is incorrect");
       }
@@ -77,10 +77,9 @@ signUp.addEventListener("click", e => {
   )
     .then(response => {
       if (response.ok) {
-        response.json()
-        .then( data => {
-          currUID = data.user.uid
-        })
+        response.json().then(data => {
+          currUID = data.user.uid;
+        });
         window.user_info = user;
         console.log("SignUp Successful");
         showAnalytic();
@@ -95,31 +94,30 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
-  showAdminList()
-  getData(currUID).then((data)=>{
-    Object.entries(data).forEach(entry => {
-      let key = entry[0];
-      let value = entry[1];
-      console.log("key",key);
-      
-      if(key === "browser"){
-        browserSection.hidden = false;
-        drawChart(value);
-      }
-      else if(key === "engagement"){
-        engagementSection.hidden = false;
-        let processedDate = processData(value);
-        console.log(processedDate);
-        drawTable(processedDate);
-      }
-      else{
-        speedSection.hidden = false;
-        drawHist(value.speed);
-      }
+  showAdminList();
+  getData(currUID)
+    .then(data => {
+      Object.entries(data).forEach(entry => {
+        let key = entry[0];
+        let value = entry[1];
+        console.log("key", key);
+
+        if (key === "browser") {
+          browserSection.hidden = false;
+          drawChart(value);
+        } else if (key === "engagement") {
+          engagementSection.hidden = false;
+          let processedDate = processData(value);
+          console.log(processedDate);
+          drawTable(processedDate);
+        } else {
+          speedSection.hidden = false;
+          drawHist(value.speed);
+        }
+      });
+      return null;
     })
-  return null;
-  })
-  .catch(error => console.log("error", error));
+    .catch(error => console.log("error", error));
 }
 
 const logout = document.getElementById("logout_btn");
@@ -136,9 +134,8 @@ logout.addEventListener("click", e => {
       login_page_el.hidden = false;
       analysis_page_el.hidden = true;
       histogramDiv.innerHTML = "";
-      piechartDiv.innerHTML="";
-      tableDiv.innerHTML="";
-
+      piechartDiv.innerHTML = "";
+      tableDiv.innerHTML = "";
     })
     .catch(error => console.log("error", error));
 });
@@ -160,56 +157,61 @@ browser.addEventListener("click", e => {
 
 google.charts.load("current", { packages: ["table"] });
 
-function processData(data){
+function processData(data) {
   let array = data.engagement;
-      console.log(array)
-      var output = array.map(function(obj) {
-        return Object.keys(obj).sort().map(function(key) { 
-          return obj[key];
-        });
+  console.log(array);
+  var output = array.map(function(obj) {
+    return Object.keys(obj)
+      .sort()
+      .map(function(key) {
+        return obj[key];
       });
-      console.log(output);
+  });
+  console.log(output);
 
-      // for the case where
+  // for the case where
 
-      // reorder so that cookie comes first, clickCount comes second
-      output = output.map(d => {
-        temp = d[1];
-        d[1] = d[0];
-        d[0] = temp;
-        return d  
-      })
-      
-      // clean cookie format, strip away "__session="
-      output = output.map(function(d){
-          let text = d[0];
-          if( text.search('=') != -1){
-            d[0]= d[0].split("=")[1];
+  // reorder so that cookie comes first, clickCount comes second
+  output = output.map(d => {
+    temp = d[1];
+    d[1] = d[0];
+    d[0] = temp;
+    return d;
+  });
 
-          } else if (text.search(':') != -1){
-            d[0] = d[0].split(':')[1];
-            d[0] = d[0].match(/\"([^\"]+)"/)[1];
-          }
-          return d 
-      })
-      return output;
+  // clean cookie format, strip away "__session="
+  output = output.map(function(d) {
+    let text = d[0];
+    if (text.search("=") != -1) {
+      d[0] = d[0].split("=")[1];
+    } else if (text.search(":") != -1) {
+      d[0] = d[0].split(":")[1];
+      d[0] = d[0].match(/\"([^\"]+)"/)[1];
+    }
+    return d;
+  });
+  return output;
 }
 
 // get engagement data and visualize them
-const engagement_btn_el= document.querySelector("#engagement_btn");
+const engagement_btn_el = document.querySelector("#engagement_btn");
 engagement_btn_el.addEventListener("click", e => {
-  fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
+  fetch(
+    "https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement"
+  )
     .then(response => {
       return response.json();
     })
     .then(data => {
       console.log(data);
       let array = data.engagement.engagement;
-      console.log(array)
+      console.log(array);
       var output = array.map(function(obj) {
-        return Object.keys(obj).sort().map(function(key) { 
-          return obj[key];
-        });
+        return Object.keys(obj)
+          .sort()
+          .map(function(key) {
+            return obj[key];
+          });
       });
       console.log(output);
 
@@ -220,27 +222,25 @@ engagement_btn_el.addEventListener("click", e => {
         temp = d[1];
         d[1] = d[0];
         d[0] = temp;
-        return d  
-      })
-      
-      // clean cookie format, strip away "__session="
-      output = output.map(function(d){
-          let text = d[0];
-          if( text.search('=') != -1){
-            d[0]= d[0].split("=")[1];
+        return d;
+      });
 
-          } else if (text.search(':') != -1){
-            d[0] = d[0].split(':')[1];
-            d[0] = d[0].match(/\"([^\"]+)"/)[1];
-          }
-          return d 
-      })
+      // clean cookie format, strip away "__session="
+      output = output.map(function(d) {
+        let text = d[0];
+        if (text.search("=") != -1) {
+          d[0] = d[0].split("=")[1];
+        } else if (text.search(":") != -1) {
+          d[0] = d[0].split(":")[1];
+          d[0] = d[0].match(/\"([^\"]+)"/)[1];
+        }
+        return d;
+      });
 
       drawTable(output);
     })
     .catch(error => console.log("error", error));
 });
-
 
 // get speed data and visualize them
 const speed_btn_el = document.querySelector("#speed_btn");
@@ -255,7 +255,6 @@ speed_btn_el.addEventListener("click", e => {
     })
     .catch(error => console.log("error", error));
 });
-
 
 /****************************
  * Drawing functions
@@ -282,7 +281,6 @@ function drawChart(data) {
   chart.draw(d, options);
 }
 
-
 function drawHist(data) {
   let pre_d = data.map(d => [d]);
   pre_d.unshift(["speed"]);
@@ -298,8 +296,6 @@ function drawHist(data) {
   chart.draw(d, options);
 }
 
-
-
 function drawTable(d) {
   // set up the data table
   var data = new google.visualization.DataTable();
@@ -308,7 +304,7 @@ function drawTable(d) {
   data.addColumn("number", "Click Count");
   data.addColumn("number", "Visit Duration(s)");
   data.addRows(d);
-  console.log(typeof(d));
+  console.log(typeof d);
   var table = new google.visualization.Table(
     document.getElementById("table_div")
   );
@@ -316,22 +312,19 @@ function drawTable(d) {
   table.draw(data, { showRowNumber: true, width: "100%", height: "100%" });
 }
 
-
-let adminEmail = 'yu123456@ucsd.edu'
-let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
-let adminPassword = '1234567'
+let adminEmail = "yu123456@ucsd.edu";
+let ownerUID = "UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1";
+let adminPassword = "1234567";
 
 /*************************************************
  * User management page functions
  *************************************************/
- 
-function showAdminList(){
-  getAllAdmin(currUID)
-  .then(adminList => {
-    let tr_string = ""
+
+function showAdminList() {
+  getAllAdmin(currUID).then(adminList => {
+    let tr_string = "";
     adminList.forEach(admin => {
-      let admin_li = 
-      `
+      let admin_li = `
       <tr>
         <td>
           ${admin.uid}
@@ -346,18 +339,17 @@ function showAdminList(){
           <input type="checkbox" checked>
         </td>
         <td>
-          <button type="button">Edit</button>
+          <button type="button" class="admin_edit_btn">Edit</button>
         </td>
         <td>
-          <button type="button">Delete</button>
+          <button type="button" class="admin_delete_btn">Delete</button>
         </td> 
       </tr>
-      `
-      tr_string += admin_li
-    })
+      `;
+      tr_string += admin_li;
+    });
 
-    let table_string = 
-      `<table id="admin_table">
+    let table_string = `<table id="admin_table">
         <thead>
           <tr>
             <th>
@@ -384,68 +376,92 @@ function showAdminList(){
           ${tr_string}
         </tbody>
       </table>
-      `
-    let user_page_el = document.querySelector('#user_page')
-    user_page_el.innerHTML = table_string
-    user_page_el.hidden = false
+      `;
+    let user_page_el = document.querySelector("#user_page");
+    user_page_el.innerHTML = table_string;
+    user_page_el.hidden = false;
 
-    let table_el = document.querySelector('#admin_table')
-    table_el.addEventListener('click', e => {
-      let target = e.target
-      target.checked = !target.checked
+    let table_el = document.querySelector("#admin_table");
+    table_el.addEventListener("click", e => {
+      let target = e.target;
+      target.checked = !target.checked;
 
       // deal with toggle checkbox
-      if(target.tagName !== 'INPUT'){
-        return
-      
-      } else {
+      if (target.tagName === "INPUT") {
+        let dialog_box_el = document.querySelector("#admin_access_popup");
+        let confirm_btn_el = dialog_box_el.querySelector("#aa_confirm_btn");
+        let cancel_btn_el = dialog_box_el.querySelector("#aa_cancel_btn");
 
-        
-        let dialog_box_el = document.querySelector("#admin_access_popup")
-        let confirm_btn_el = dialog_box_el.querySelector("#aa_confirm_btn")
-        let cancel_btn_el = dialog_box_el.querySelector("#aa_cancel_btn")
+        dialog_box_el.open = true;
+        let currCheckbox = target.checked;
 
-        dialog_box_el.open = true
-        let currCheckbox = target.checked
-
-        confirm_btn_el.addEventListener('click', e => {
-          // if confirmed, 1) toggle checkbox 
+        confirm_btn_el.addEventListener("click", e => {
+          // if confirmed, 1) toggle checkbox
           // 2) get UID of the toggled user
           // 3) call endpoint
           // 4) make dialog disappear
 
           //1)
-          target.checked = !currCheckbox
+          target.checked = !currCheckbox;
 
           //2)
-          let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim()
+          let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
 
           //3)
-          modifyAdminAccess(currUID, otherUID, target.checked)
-
+          modifyAdminAccess(currUID, otherUID, target.checked);
 
           //4)
-          dialog_box_el.open = false
-        })
+          dialog_box_el.open = false;
+        });
 
-        cancel_btn_el.addEventListener('click', e => {
+        cancel_btn_el.addEventListener("click", e => {
           // if cancel button is clicked, make dialog disappear
-          dialog_box_el.open = false
-        })
+          dialog_box_el.open = false;
+        });
 
-        
+        // if edit button is clicked, open popup
+      } else if(target.className === 'admin_edit_btn'){
+
+        // copy email value from the table
+        let ea_email_el = editAccountPopup.getElementById('ea_email')
+        let ea_password_el = editAccountPopup.getElementById('ea_password')
+        ea_email_el.value = target.parentElement.parentElement.firstElementChild.nextElementSibling.textContent.trim()
+        editAccountPopup.open = true
+
+        const ea_confirm_btn_el = document.getElementById("ea_confirm_btn")
+        const ea_cancel_btn_el = document.getElementById('ea_cancel_btn')
+
+        ea_confirm_btn_el.addEventListener('click', e => {
+          //1) get account info
+          //2) get other uid
+          //3) send to endpoint
+          //4) update table
+          //5) make dialog disappear 
+
+          //1)
+          let userEmail = ea_email_el.value
+          let userPassword = ea_password_el.value
+          //2)
+          let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
+          //3)
+          editAccount(currUID, otherUID, {'email':userEmail, 'password':userPassword})
+          //4)
+          target.parentElement.parentElement
+            .firstElementChild.nextElementSibling.innerText = userEmail
+          //5)
+          editAccountPopup.open = false
+        })
       }
-    })
-  })
+    });
+  });
 }
 
-function showUserList(){
+function showUserList() {
   getAllUser(currUID)
-  .then(userList => {
-    let tr_string = "";
-    userList.forEach(user => {
-      let user_li = 
-      `
+    .then(userList => {
+      let tr_string = "";
+      userList.forEach(user => {
+        let user_li = `
       <tr>
         <td>
           ${user.uid}
@@ -466,12 +482,11 @@ function showUserList(){
           <button type="button" class="deleteUser">Delete User</button>
         </td> 
       </tr>
-      `
-      tr_string += user_li;
-    })
-    
-    let table_string = 
-      `<table id="user_table">
+      `;
+        tr_string += user_li;
+      });
+
+      let table_string = `<table id="user_table">
         <thead>
           <tr>
             <th>
@@ -520,7 +535,6 @@ function showUserList(){
 
         }
         else if(e.target.className === "deleteUser"){
-
         }
       }
     });
@@ -556,25 +570,23 @@ function showUserList(){
  * @param {String} newEmail email of the new account
  * @param {*} newPwd password of the new account
  */
-function addAccount(currUID, newEmail, newPwd){
-
+function addAccount(currUID, newEmail, newPwd) {
   return new Promise((resolve, reject) => {
+    let data = {
+      currUID: currUID,
+      accountInfo: { email: newEmail, password: newPwd }
+    };
+    let endPointUrl =
+      "https://us-central1-acewebtool.cloudfunctions.net/addAccount";
 
-  let data = {'currUID':currUID, "accountInfo":{'email':newEmail, 'password':newPwd}};
-  let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/addAccount";
-
-   fetch(
-    endPointUrl, 
-    sendbody('POST', data)
-  )
-  .then(r => r.json())
-  .then(data => 
-    {
-      console.log(data)
-      resolve(data);
-    })
-  .catch(e => console.error(e));
-  })
+    fetch(endPointUrl, sendbody("POST", data))
+      .then(r => r.json())
+      .then(data => {
+        console.log(data);
+        resolve(data);
+      })
+      .catch(e => console.error(e));
+  });
 }
 
 // modify account
@@ -582,146 +594,128 @@ function addAccount(currUID, newEmail, newPwd){
  * Generic function that send request to editAccount
  * @param {string} currUID UID of the owner or admin
  * @param {string} otherUID UID of the account to be modified
- * @param {object} modifiedAccount a JSON that stores all the account info to be modified. 
+ * @param {object} modifiedAccount a JSON that stores all the account info to be modified.
  */
-function editAccount(currUID, otherUID, modifiedAccount){
-  let data = {'currUID':currUID, 'otherUID':otherUID, 'modifiedAccount':modifiedAccount}
-  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess"
+function editAccount(currUID, otherUID, modifiedAccount) {
+  let data = {
+    currUID: currUID,
+    otherUID: otherUID,
+    modifiedAccount: modifiedAccount
+  };
+  let endURL =
+    "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess";
 
-  fetch(
-    endURL, 
-    sendbody('POST', data)
-  )
+  fetch(endURL, sendbody("POST", data))
     .then(response => response.json())
     .then(data => console.log(data))
-    .catch(e => console.log(e))
+    .catch(e => console.log(e));
 }
 
-
-
 /**
- * 
- * @param {string} ownerUID UID of the owner 
+ *
+ * @param {string} ownerUID UID of the owner
  * @param {string} adminUID UID of the admin account whose access are to be modified
  * @param {boolean} modifyFlag This is a flag that specify whether grant or retract access. true means grant this account admin access, false means retract this account admin access
  */
-function modifyAdminAccess(ownerUID, adminUID , modifyFlag){
-  let data = {'currUID':ownerUID, 'adminUID':adminUID, 'modifyFlag':modifyFlag};
-  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess"
+function modifyAdminAccess(ownerUID, adminUID, modifyFlag) {
+  let data = { currUID: ownerUID, adminUID: adminUID, modifyFlag: modifyFlag };
+  let endURL =
+    "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess";
 
-  fetch(
-    endURL, 
-    sendbody('POST', data)
-  )
+  fetch(endURL, sendbody("POST", data))
     .then(response => response.json())
     .then(data => console.log(data))
-    .catch(e => console.log(e))
+    .catch(e => console.log(e));
 }
 
-function deleteAccount(currUID,otherUID){
+function deleteAccount(currUID, otherUID) {
   return new Promise((resolve, reject) => {
+    let data = { currUID: currUID, otherUID: otherUID };
+    let endPointUrl =
+      "https://us-central1-acewebtool.cloudfunctions.net/deleteAccount";
 
-    let data = {'currUID':currUID, 'otherUID':otherUID};
-    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/deleteAccount";
-  
-     fetch(
-      endPointUrl, 
-      sendbody('POST', data)
-    )
-    .then(r => r.text())
-    .then(text => console.log(text))
-    .catch(e => console.error(e))
-    })
+    fetch(endPointUrl, sendbody("POST", data))
+      .then(r => r.text())
+      .then(text => console.log(text))
+      .catch(e => console.error(e));
+  });
 }
-
 
 /**
- * Get all the admin information 
+ * Get all the admin information
  * @param {string} currUID Get all the admin info
  * @returns {array} list of admin user info
  */
-function getAllAdmin(currUID){
+function getAllAdmin(currUID) {
   return new Promise((resolve, reject) => {
-    let data = {'currUID':currUID}
-    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/getAllAdmin";
+    let data = { currUID: currUID };
+    let endPointUrl =
+      "https://us-central1-acewebtool.cloudfunctions.net/getAllAdmin";
 
-    fetch(
-      endPointUrl, 
-      sendbody('POST', data)
-    )
-    .then(r => {
-      return r.json()
-    })
-      .then(data => {
-        console.log(data)
-        resolve(data)
-        return null;
-
+    fetch(endPointUrl, sendbody("POST", data))
+      .then(r => {
+        return r.json();
       })
-    .catch(e => reject(e.message))
-  })
+      .then(data => {
+        console.log(data);
+        resolve(data);
+        return null;
+      })
+      .catch(e => reject(e.message));
+  });
 }
 
-
-
 /**
- * Get all the user information 
+ * Get all the user information
  * @param {string} currUID Get all the admin info
  * @returns {array} list of normal user info
  */
-function getAllUser(currUID){
+function getAllUser(currUID) {
   return new Promise((resolve, reject) => {
-    let data = {'currUID':currUID}
-    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/getAllUser";
+    let data = { currUID: currUID };
+    let endPointUrl =
+      "https://us-central1-acewebtool.cloudfunctions.net/getAllUser";
 
-    fetch(
-      endPointUrl, 
-      sendbody('POST', data)
-    )
-    .then(r => {
-      return r.json()
-    })
+    fetch(endPointUrl, sendbody("POST", data))
+      .then(r => {
+        return r.json();
+      })
       .then(data => {
-        console.log(data)
+        console.log(data);
         return null;
       })
-    .catch(e => reject(e.message))
-  })
+      .catch(e => reject(e.message));
+  });
 }
 
-function modifyGraphAccess(currUID,otherUID,graphAccess){
-  let data = {'currUID':currUID, 'otherUID':otherUID, 'graphAccess':graphAccess}
-  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyGraphAccess"
+function modifyGraphAccess(currUID, otherUID, graphAccess) {
+  let data = { currUID: currUID, otherUID: otherUID, graphAccess: graphAccess };
+  let endURL =
+    "https://us-central1-acewebtool.cloudfunctions.net/modifyGraphAccess";
 
-  fetch(
-    endURL, 
-    sendbody('POST', data)
-  )
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(e => console.log(e))  
- }
+  fetch(endURL, sendbody("POST", data))
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(e => console.log(e));
+}
 /**
  * This function get graph data that is allowed to be accessed by currUID.
  * @param {string} currUID the current user's uid
  */
-function getData(currUID){
-
+function getData(currUID) {
   return new Promise((resolve, reject) => {
-
     // fetch the data from getData endpoint
-    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/getData?currUID=" + currUID
+    let endPointUrl =
+      "https://us-central1-acewebtool.cloudfunctions.net/getData?currUID=" +
+      currUID;
     fetch(endPointUrl)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      console.log(data)
-      resolve(data)
-    })
-    .catch(e => reject(e))
-  })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        resolve(data);
+      })
+      .catch(e => reject(e));
+  });
 }
-
-
-
