@@ -29,10 +29,6 @@ login.addEventListener("click", e => {
     .then(function(response) {
       if (response.ok) {
         console.log("login success, redirecting...");
-        response.json()
-        .then( data => {
-          currUID = data.user.uid
-        })
         window.user_info = JSON.parse(response.body);
         showAnalytic();
       } else {
@@ -72,6 +68,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+  showAdminList()
 }
 
 const logout = document.getElementById("logout_btn");
@@ -291,10 +288,10 @@ function showAdminList(){
   })
   let user_page_el = document.querySelector('#user_page')
   user_page_el.innerHTML(table_string)
+  user_page_el.hidden = false
 }
 
 
-showAdminList
 
 
 
