@@ -332,6 +332,8 @@ exports.getData = functions.https.onRequest((req,res) => {
     })
     .catch(e=>console.log(e));
 
+  })
+
     
 
 admin.initializeApp({
