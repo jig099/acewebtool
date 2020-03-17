@@ -44,14 +44,41 @@
         <button id="userManagement" hidden>user Management</button>
         <div id="user_page" hidden></div>
 
-
-        <dialog id="admin_popup">
+        <dialog id="admin_access_popup">
             <p> Do you want to toggle the admin access for this user?</p>
-            <button id="confirm_btn">Confirm</button>
-            <button id="cancel_btn">Cancel</button>
+            <button id="aa_confirm_btn">Confirm</button>
+            <button id="aa_cancel_btn">Cancel</button>
         </dialog>
  
+        <dialog id="user_graph_access_popup">
+            <label>browser graph</label>
+            <input type="checkbox"><br>
+            <label>engagement graph</label>
+            <input type="checkbox"><br>
+            <label>speed graph</label>
+            <input type="checkbox"><br>
+            <button id="uga_confirm_btn">Confirm</button>
+            <button id="uga_cancel_btn">Cancel</button>
+        </dialog>
+        
+        <dialog id="edit_account_popup">
+            <input id="ea_email"><br>
+            <input id="ea_password"><br>
+            <button id="ea_confirm_btn">Confirm</button>
+            <button id="ea_cancel_btn">Cancel</button>
+        </dialog>
 
+        <dialog id="create_account_popup">
+            <input id="ca_email"><br>
+            <input id="ca_password"><br>
+            <button id="ca_confirm_btn">Confirm</button>
+            <button id="ca_cancel_btn">Cancel</button>
+        </dialog>
+
+        <dialog id="delete_popup">
+            <button id="d_confirm_btn">Confirm</button>
+            <button id="d_cancel_btn">Cancel</button>
+        </dialog>
         <script src="./scripts/analytics.js"> </script>
     </body>
 </html>
