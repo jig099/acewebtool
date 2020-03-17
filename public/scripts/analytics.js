@@ -479,16 +479,14 @@ function showUserList() {
     document.getElementById("user_table").addEventListener("click",(e)=>{
       if(e.target){
         let otherUID = e.target.getAttribute('data-otherUid');
-        console.log(otherUID);
-        console.log(JSON.parse(e.target.getAttribute('data-graphAccess')));
         if(e.target.className === "userAccessControl"){
           if(JSON.parse(e.target.getAttribute('data-graphAccess'))!==null){
             console.log((e.target.getAttribute('data-graphAccess')));
             let accessArray = JSON.parse(e.target.getAttribute('data-graphAccess')); 
             console.log("accessArray",accessArray);
-            browserAccess.value = accessArray[0];
-            engagementAccess.value = accessArray[1];
-            speedAccess.value = accessArray[2];
+            browserAccess.value = (accessArray[0]==='true');
+            engagementAccess.value = (accessArray[1]==='true');
+            speedAccess.value = (accessArray[2]==='true');
           }
           else{
             browserAccess.value = false;
