@@ -11,6 +11,7 @@ const histogramDiv = document.getElementById("histogram");
 const piechartDiv = document.getElementById('piechart');
 const tableDiv = document.getElementById('table_div');
 const user_page_el = document.querySelector('#user_page');
+const userManagementBtn = document.getElementById('userManagement');
 
 
 let currUID;
@@ -42,9 +43,11 @@ login.addEventListener("click", e => {
         response.json()
         .then( data => {
           currUID = data.user.uid;
+          console.log(data);
         })
         .then(()=>{
          showAnalytic();
+
          return null;
         })
         .catch(e => console.log(e));
@@ -79,7 +82,6 @@ signUp.addEventListener("click", e => {
     })
     .catch(error => console.log("error", error));
 });
-
 function showAnalytic() {
   let login_page_el = document.querySelector("#login_page");
   let analysis_page_el = document.querySelector("#analysis_page");
@@ -337,10 +339,10 @@ function showAdminList(){
         </td>
         <td>
           <button type="button">Edit</button>
-        <td>
+        </td>
         <td>
           <button type="button">Delete</button>
-        <td> 
+        </td> 
       </tr>
       `
       tr_string += admin_li
@@ -413,6 +415,7 @@ function showAdminList(){
           //3)
           modifyAdminAccess(currUID, otherUID, target.checked)
 
+
           //4)
           dialog_box_el.open = false
         })
@@ -427,6 +430,89 @@ function showAdminList(){
     })
   })
 }
+
+function showUserList(){
+  getAllUser(currUID)
+  .then(userList => {
+    let tr_string = "";
+    userList.forEach(user => {
+      let user_li = 
+      `
+      <tr>
+        <td>
+          ${user.uid}
+        </td>
+        <td>
+          ${user.email}
+        </td>
+        <td>
+          ${user.metadata.creationTime}
+        </td>
+        <td>
+          <button type="button" class="userAccessControl">User Access Control</button>
+        </td>
+        <td>
+          <button type="button" class="editUser">Edit User Info</button>
+        </td>
+        <td>
+          <button type="button" class="deleteUser">Delete User</button>
+        </td> 
+      </tr>
+      `
+      tr_string += user_li;
+    })
+    
+    let table_string = 
+      `<table id="user_table">
+        <thead>
+          <tr>
+            <th>
+              UID
+            </th>
+            <th>
+              Email
+            </th>
+            <th>
+              Creation Time
+            </th>
+            <th>
+              Data Access
+            </th>
+            <th>
+              User Access Control
+            </th>
+            <th>
+              Edit User Info
+            </th>
+            <th>
+              Delete User
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tr_string}
+        </tbody>
+      </table>
+      `
+    user_page_el.innerHTML = table_string;
+    user_page_el.hidden = false;
+  })
+  .then(()=>{
+    window.getElementById("user_table").addEventListener("click",(e)=>{
+      if(e.target){
+        if(e.target.className === "userAccessControl"){
+          
+        }
+        else if (e.target.className === "editUser"){
+
+        }
+        else if(e.target.className === "deleteUser"){
+
+        }
+      }
+    });
+  })
+};
 
 
 
