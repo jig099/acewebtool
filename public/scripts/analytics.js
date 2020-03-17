@@ -13,6 +13,12 @@ const tableDiv = document.getElementById('table_div');
 const user_page_el = document.querySelector('#user_page');
 const userManagementBtn = document.getElementById('userManagement');
 
+//all the popup boxes
+const userGraphAccessPopup = document.getElementById("user_graph_access_popup");
+const adminAccessPopup = document.getElementById("admin_access_popup");
+const editAccountPopup = document.getElementById("edit_account_popup");
+const createAccountPopup = document.getElementById("create_account_popup");
+const deletePopup = document.getElementById("delete_popup");
 
 let currUID;
 
