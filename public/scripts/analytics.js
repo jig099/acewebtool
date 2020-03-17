@@ -401,6 +401,9 @@ function getData(currUID){
 }
 
 
+let userUID = "AaaPBV1ZyMSgqs1LnYJAhLK41rk2"
+
+
 // fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
 //     .then(response => {
 //       return response.json();
