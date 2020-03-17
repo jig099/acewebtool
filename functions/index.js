@@ -467,7 +467,7 @@ exports.editAccount = functions.https.onRequest((req,res)=>{
     res.status(204).send("");
   } else {
 
-    let body = JSON.parse(req.body)
+    let body = JSON.parse(req.body);
      
     // parse data
     let modifiedAccount = body.modifiedAccount;
@@ -487,6 +487,7 @@ exports.editAccount = functions.https.onRequest((req,res)=>{
             res.status(200).send(JSON.stringify(r))
             return null
           })
+          .catch(e => console.error(e));
         } else {
           res.status(500).send("You do not have access to edit this account!")
         }
@@ -497,11 +498,11 @@ exports.editAccount = functions.https.onRequest((req,res)=>{
       // if currUID is not a owner, check if it is admin
       admin.auth().getUser(currUID)
       .then(r => {
-        let currAccess = r.customClaims.admin ? 'admin' : 'nonadmin'
+        let currAccess = r.customClaims.admin ? 'admin' : 'nonadmin';
         admin.auth().getUser(otherUID)
         .then(r => {
-          let otherAccess = r.customClaims.admin ? 'admin' : 'nonadmin'
-          // if curr is admin, other is user, then we are gold
+          let otherAccess = r.customClaims.admin ? 'admin' : 'nonadmin';
+          // if curr is admin, other is user, then we are good
           if(currAccess === 'admin' && otherAccess === 'nonadmin'){
             admin.auth().updateUser(otherUID, modifiedAccount)
             .then(r => {
@@ -682,3 +683,54 @@ exports.getAllUser= functions.https.onRequest((req,res) => {
   } 
 });
 
+exports.modifyGraphAccess = functions.https.onRequest((req,res) => {
+  res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
+  res.set("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    res.set("Access-Control-Allow-Methods", "GET");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+  } else {
+    
+    let body = JSON.parse(req.body)
+    let currUID = body.currUID;
+    let otherUID = body.otherUID;
+    let graphAccess = body.graphAccess;
+    //first we want to check if current user is a admin or not
+    admin.auth().getUser(currUID)
+    .then(r => {
+      let currAccess = r.customClaims.admin ? true : false;
+      admin.auth().getUser(otherUID)
+      .then(r => {
+        let otherAccess = (r.customClaims.admin ? false : true) && (r.customClaims.owner? false : true); 
+        //if both accesses are ok
+        if(currAccess && otherAccess){
+          admin.auth().setCustomUserClaims(otherUID,graphAccess)
+          .then(() => {
+            admin.auth().getUser(otherUID)
+            .then(userRecord => 
+             {
+               console.log(userRecord);
+               res.status(200).send(JSON.stringify(userRecord));
+               return null;
+             })
+           .catch(e=> {
+             console.log(e)
+             res.status(504).send(e.message);
+           });
+           return null;
+          });
+        }
+        else{
+          res.status(500).send("Only admin can modify user account")
+        }
+        return null;
+      })
+      .catch(e => console.error(e))
+      return null;
+    })
+    .catch(e => console.error(e))
+  }
+});
