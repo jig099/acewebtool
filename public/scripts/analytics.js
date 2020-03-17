@@ -10,6 +10,9 @@ const engagementSection = document.getElementById("engagement_section");
 const histogramDiv = document.getElementById("histogram");
 const piechartDiv = document.getElementById('piechart');
 const tableDiv = document.getElementById('table_div');
+const user_page_el = document.querySelector('#user_page');
+
+
 let currUID;
 
 
@@ -332,6 +335,12 @@ function showAdminList(){
         <td>
           <input type="checkbox" checked>
         </td>
+        <td>
+          <button type="button">Edit</button>
+        <td>
+        <td>
+          <button type="button">Delete</button>
+        <td> 
       </tr>
       `
       tr_string += admin_li
@@ -352,6 +361,12 @@ function showAdminList(){
             </th>
             <th>
               Admin access
+            </th>
+            <th>
+              Edit
+            </th>
+            <th>
+              Delete
             </th>
           </tr>
         </thead>
@@ -379,20 +394,13 @@ function showAdminList(){
         let confirm_btn_el = dialog_box_el.querySelector("#confirm_btn")
         let cancel_btn_el = dialog_box_el.querySelector("#cancel_btn")
 
-        dialog_box_el
+        dialog_box_el.open = true
 
         confirm_btn_el.addEventListener('click', e => {
 
         })
-
-       
-
       }
-
-
-
     })
-
   })
 }
 
