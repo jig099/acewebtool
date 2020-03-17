@@ -47,6 +47,10 @@ signUp.addEventListener("click", e => {
   )
     .then(response => {
       if (response.ok) {
+        response.json()
+        .then( data => {
+          currUID = data.user.uid
+        })
         window.user_info = user;
         console.log("SignUp Successful");
         showAnalytic();

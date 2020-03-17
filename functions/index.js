@@ -214,7 +214,10 @@ exports.signup = functions.https.onRequest((req, res) => {
       user.emailVal,
       user.pwdVal
     )
-    .then((r)=>{res.status(200).send(r);return null})
+    .then( r =>{
+      res.status(200).send(JSON.stringify(r))
+      return null
+    })
     .catch(e => console.log(e.message));
   }
 });
