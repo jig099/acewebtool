@@ -325,13 +325,17 @@ exports.getData = functions.https.onRequest((req,res) => {
             return null;
           })
           .catch(e=>console.log(e))
+          return null;
         })
         .catch(e=>console.log(e));
+       return null; 
       })
       .catch(e=>console.log(e));
-    })
+    return null;
+  })
     .catch(e=>console.log(e));
-
+  }
+ });
     
 
 admin.initializeApp({
@@ -727,10 +731,10 @@ exports.modifyGraphAccess = functions.https.onRequest((req,res) => {
     //first we want to check if current user is a admin or not
     admin.auth().getUser(currUID)
     .then(r => {
-      let currAccess = r.customClaims.admin;
+      let currAccess = r.customClaims ? r.customClaims.admin : false ;
       admin.auth().getUser(otherUID)
       .then(r => {
-        let otherAccess = (r.customClaims.admin) && (!r.customClaims.owner); 
+        let otherAccess = (!r.customClaims) || ((!r.customClaims.admin) && (!r.customClaims.owner)); 
         //if both accesses are ok
         console.log("currA",currAccess);
         if(currAccess && otherAccess){
@@ -762,4 +766,4 @@ exports.modifyGraphAccess = functions.https.onRequest((req,res) => {
     })
     .catch(e => console.error(e))
   }
-});
+})
