@@ -308,7 +308,7 @@ function showAdminList(){
   getAllAdmin(currUID)
   .then(adminList => {
     let tr_string = ""
-    adminList.foreach(admin => {
+    adminList.forEach(admin => {
       let admin_li = 
       `
       <tr>
@@ -326,11 +326,11 @@ function showAdminList(){
         </td>
       </tr>
       `
-      tr_string += tr_string
+      tr_string += admin_li
     })
 
     let table_string = 
-      `<table>
+      `<table id="admin_table">
         <thead>
           <tr>
             <th>
@@ -355,6 +355,8 @@ function showAdminList(){
     let user_page_el = document.querySelector('#user_page')
     user_page_el.innerHTML = table_string
     user_page_el.hidden = false
+
+    let table_el = document.querySelector('#admin_table')
 
   })
   }
@@ -484,7 +486,9 @@ function getAllAdmin(currUID){
     })
       .then(data => {
         console.log(data)
+        resolve(data)
         return null;
+
       })
     .catch(e => reject(e.message))
   })
