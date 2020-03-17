@@ -11,8 +11,8 @@ const histogramDiv = document.getElementById("histogram");
 const piechartDiv = document.getElementById('piechart');
 const tableDiv = document.getElementById('table_div');
 const user_page_el = document.querySelector('#user_page');
-const table_el = document.querySelector('#admin_table');
 const userManagementBtn = document.getElementById('userManagement');
+
 
 let currUID;
 
@@ -87,6 +87,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+  showAdminList()
   getData(currUID).then((data)=>{
     Object.entries(data).forEach(entry => {
       let key = entry[0];
@@ -376,17 +377,64 @@ function showAdminList(){
         </tbody>
       </table>
       `
-    user_page_el.innerHTML = table_string;
-    user_page_el.hidden = false;
-  })
+    let user_page_el = document.querySelector('#user_page')
+    user_page_el.innerHTML = table_string
+    user_page_el.hidden = false
 
-  user_page_el.innerHTML(table_string)
+    let table_el = document.querySelector('#admin_table')
+    table_el.addEventListener('click', e => {
+      let target = e.target
+      target.checked = !target.checked
+
+      // deal with toggle checkbox
+      if(target.tagName !== 'INPUT'){
+        return
+      
+      } else {
+
+        
+        let dialog_box_el = document.querySelector("#admin_popup")
+        let confirm_btn_el = dialog_box_el.querySelector("#confirm_btn")
+        let cancel_btn_el = dialog_box_el.querySelector("#cancel_btn")
+
+        dialog_box_el.open = true
+        let currCheckbox = target.checked
+
+        confirm_btn_el.addEventListener('click', e => {
+          // if confirmed, 1) toggle checkbox 
+          // 2) get UID of the toggled user
+          // 3) call endpoint
+          // 4) make dialog disappear
+
+          //1)
+          target.checked = !currCheckbox
+
+          //2)
+          let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim()
+
+          //3)
+          modifyAdminAccess(currUID, otherUID, target.checked)
+
+
+          //4)
+          dialog_box_el.open = false
+        })
+
+        cancel_btn_el.addEventListener('click', e => {
+          // if cancel button is clicked, make dialog disappear
+          dialog_box_el.open = false
+        })
+
+        
+      }
+    })
+  })
 }
 
 function showUserList(){
   getAllUser(currUID)
   .then(userList => {
-    let tr_string = ""
+    let tr_string = "";
     userList.forEach(user => {
       let user_li = 
       `
@@ -464,7 +512,7 @@ function showUserList(){
       }
     });
   })
-}
+};
 
 
 
