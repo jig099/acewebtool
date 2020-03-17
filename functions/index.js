@@ -303,7 +303,9 @@ exports.getData = functions.https.onRequest((req,res) => {
       })
       res.set("Content-Type", "application/JSON");
       res.status(200).send(JSON.stringify(dataList));
+      return null;
     })
+    .catch(e=>console.log(e));
   }
 });
 

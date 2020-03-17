@@ -341,7 +341,6 @@ function getAllAdmin(currUID){
 
 
 
-getAllUser("xJSewH7W5dOJqrHDQUn2Qefvsa12")
 /**
  * Get all the user information 
  * @param {string} currUID Get all the admin info
@@ -379,7 +378,6 @@ function modifyGraphAccess(currUID,otherUID,graphAccess){
   .then(data => console.log(data))
   .catch(e => console.log(e))  
  }
- 
 /**
  * This function get graph data that is allowed to be accessed by currUID.
  * @param {string} currUID the current user's uid
