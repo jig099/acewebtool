@@ -91,11 +91,12 @@ function showAnalytic() {
       }
       else if(key === "engagement"){
         engagementSection.hidden = false;
-        drawTable(processData(value));
+        let processedDate = processData(value);
+        drawTable(processedDate);
       }
       else{
         speedSection.hidden = false;
-        drawHist(value);
+        drawHist(value.speed);
       }
     })
   return null;
@@ -138,7 +139,7 @@ browser.addEventListener("click", e => {
 google.charts.load("current", { packages: ["table"] });
 
 function processData(data){
-  let array = data.engagement.engagement;
+  let array = data.engagement;
       console.log(array)
       var output = array.map(function(obj) {
         return Object.keys(obj).sort().map(function(key) { 
@@ -284,7 +285,6 @@ function drawTable(d) {
   data.addColumn("string", "Cookie");
   data.addColumn("number", "Click Count");
   data.addColumn("number", "Visit Duration(s)");
-  console.log(typeof(d));
   data.addRows(d);
 
   var table = new google.visualization.Table(
