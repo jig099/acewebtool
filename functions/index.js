@@ -239,9 +239,8 @@ exports.login = functions.https.onRequest((req, res) => {
     user = JSON.parse(req.body);
     const promise = auth.signInWithEmailAndPassword(user.emailVal, user.pwdVal);
     promise
-      .then(() => {
-        var user = firebase.auth().currentUser; 
-        res.status(200).send(JSON.stringify(user));
+      .then((r) => {
+        res.status(200).send(JSON.stringify(r));
         return null;
       })
       .catch(e => {
