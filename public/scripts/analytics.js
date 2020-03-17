@@ -55,7 +55,7 @@ login.addEventListener("click", e => {
           })
           .then(() => {
             showAnalytic();
-
+            
             return null;
           })
           .catch(e => console.log(e));
@@ -94,7 +94,8 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
-  showAdminList();
+//  showAdminList();
+  showUserList();
   getData(currUID)
     .then(data => {
       Object.entries(data).forEach(entry => {
@@ -140,22 +141,6 @@ logout.addEventListener("click", e => {
     .catch(error => console.log("error", error));
 });
 
-const browser = document.getElementById("browser_btn");
-browser.addEventListener("click", e => {
-  fetch(
-    "https://us-central1-acewebtool.cloudfunctions.net/getdata?type=browser"
-  )
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      console.log(data.browser);
-      drawChart(data.browser);
-    })
-    .catch(error => console.log("error", error));
-});
-
-google.charts.load("current", { packages: ["table"] });
 
 function processData(data) {
   let array = data.engagement;
@@ -193,68 +178,6 @@ function processData(data) {
   return output;
 }
 
-// get engagement data and visualize them
-const engagement_btn_el = document.querySelector("#engagement_btn");
-engagement_btn_el.addEventListener("click", e => {
-  fetch(
-    "https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement"
-  )
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      let array = data.engagement.engagement;
-      console.log(array);
-      var output = array.map(function(obj) {
-        return Object.keys(obj)
-          .sort()
-          .map(function(key) {
-            return obj[key];
-          });
-      });
-      console.log(output);
-
-      // for the case where
-
-      // reorder so that cookie comes first, clickCount comes second
-      output = output.map(d => {
-        temp = d[1];
-        d[1] = d[0];
-        d[0] = temp;
-        return d;
-      });
-
-      // clean cookie format, strip away "__session="
-      output = output.map(function(d) {
-        let text = d[0];
-        if (text.search("=") != -1) {
-          d[0] = d[0].split("=")[1];
-        } else if (text.search(":") != -1) {
-          d[0] = d[0].split(":")[1];
-          d[0] = d[0].match(/\"([^\"]+)"/)[1];
-        }
-        return d;
-      });
-
-      drawTable(output);
-    })
-    .catch(error => console.log("error", error));
-});
-
-// get speed data and visualize them
-const speed_btn_el = document.querySelector("#speed_btn");
-speed_btn_el.addEventListener("click", e => {
-  fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=speed")
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      console.log(data.speed.speed);
-      drawHist(data.speed.speed);
-    })
-    .catch(error => console.log("error", error));
-});
 
 /****************************
  * Drawing functions
@@ -517,7 +440,7 @@ function showUserList() {
         </tbody>
       </table>
       `
-    console.log("gere");
+    console.log("here");
     user_page_el.innerHTML = table_string;
     user_page_el.hidden = false;
   })
@@ -682,6 +605,7 @@ function getAllUser(currUID) {
       })
       .then(data => {
         console.log(data);
+        resolve(data);
         return null;
       })
       .catch(e => reject(e.message));
