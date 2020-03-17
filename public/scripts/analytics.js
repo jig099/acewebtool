@@ -102,7 +102,7 @@ google.charts.load("current", { packages: ["table"] });
 // get engagement data and visualize them
 const engagement_btn_el= document.querySelector("#engagement_btn");
 engagement_btn_el.addEventListener("click", e => {
-  fetch("https://us-central1-aciewebtool.cloudfunctions.net/getdata?type=engagement")
+  fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
     .then(response => {
       return response.json();
     })
@@ -265,7 +265,7 @@ function addAccount(currUID, newEmail, newPwd){
  */
 function editAccount(currUID, otherUID, modifiedAccount){
   let data = {'currUID':currUID, 'otherUID':otherUID, 'modifiedAccount':modifiedAccount}
-  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/editAccount"
+  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess"
 
   fetch(
     endURL, 
@@ -367,9 +367,8 @@ function getAllUser(currUID){
   })
 }
 
-<<<<<<< HEAD
 /**
- * This 
+ * This function get graph data that is allowed to be accessed by currUID.
  * @param {string} currUID the current user's uid
  */
 function getData(currUID){
@@ -406,17 +405,17 @@ function getData(currUID){
 //       });
 //       console.log(output);
 
-=======
-function modifyGraphAccess(currUID,otherUID,graphAccess){
-  let data = {'currUID':currUID, 'otherUID':otherUID, 'graphAccess':graphAccess}
-  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/graphAccess"
->>>>>>> 932e0c4c31524c57bc9840277dea445b568c22f7
 
-  fetch(
-    endURL, 
-    sendbody('POST', data)
-  )
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(e => console.log(e))  
-}
+
+
+
+
+
+// getAllAdmin(ownerUID);
+
+/*function editAccount(currUID,otherUID,updatedInfo){
+  return new Promise ((resolve.reject)=>{
+    
+    
+  });
+}*/
