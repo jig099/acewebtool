@@ -82,6 +82,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+  showAdminList()
   getData(currUID).then((data)=>{
     Object.entries(data).forEach(entry => {
       let key = entry[0];
@@ -359,22 +360,43 @@ function showAdminList(){
         </tbody>
       </table>
       `
-<<<<<<< HEAD
-=======
     let user_page_el = document.querySelector('#user_page')
     user_page_el.innerHTML = table_string
     user_page_el.hidden = false
 
     let table_el = document.querySelector('#admin_table')
+    table_el.addEventListener('click', e => {
+      let target = e.target
 
->>>>>>> 6445f0cc8a0f39939285352dca64437268fba6fd
+      // deal with toggle checkbox
+      if(target.tagName !== 'INPUT'){
+        return
+      
+      } else {
+
+        
+        let dialog_box_el = document.querySelector("#admin_popup")
+        let confirm_btn_el = dialog_box_el.querySelector("#confirm_btn")
+        let cancel_btn_el = dialog_box_el.querySelector("#cancel_btn")
+
+        dialog_box_el
+
+        confirm_btn_el.addEventListener('click', e => {
+
+        })
+
+       
+
+      }
+
+
+
+    })
+
   })
-  let user_page_el = document.querySelector('#user_page')
-  user_page_el.innerHTML(table_string)
 }
 
 
-showAdminList
 
 
 
