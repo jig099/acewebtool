@@ -4,8 +4,11 @@ const email = document.getElementById("email");
 const password = document.getElementById("password");
 const login = document.getElementById("loginBtn");
 const signUp = document.getElementById("signUpBtn");
-
+const speedSection = document.getElementById("speed_section");
+const browserSection = document.getElementById("browser_section");
+const engagementSection = document.getElementById("engagement_section");
 let currUID;
+
 
 function sendbody(method, body) {
   const requestOptions = {
@@ -29,12 +32,16 @@ login.addEventListener("click", e => {
     .then(function(response) {
       if (response.ok) {
         console.log("login success, redirecting...");
+        console.log(response);
         response.json()
         .then( data => {
-          currUID = data.user.uid
+          currUID = data.user.uid;
         })
-        window.user_info = JSON.parse(response.body);
-        showAnalytic();
+        .then(()=>{
+         showAnalytic();
+         return null;
+        })
+        .catch(e => console.log(e));
       } else {
         console.error("The username or password is incorrect");
       }
@@ -72,6 +79,28 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+  getData(currUID).then((data)=>{
+    Object.entries(data).forEach(entry => {
+      let key = entry[0];
+      let value = entry[1];
+      console.log("key",key);
+      
+      if(key === "browser"){
+        browserSection.hidden = false;
+        drawChart(value);
+      }
+      else if(key === "engagement"){
+        engagementSection.hidden = false;
+        drawTable(processData(value));
+      }
+      else{
+        speedSection.hidden = false;
+        drawHist(value);
+      }
+    })
+  return null;
+  })
+  .catch(error => console.log("error", error));
 }
 
 const logout = document.getElementById("logout_btn");
@@ -108,6 +137,40 @@ browser.addEventListener("click", e => {
 
 google.charts.load("current", { packages: ["table"] });
 
+function processData(data){
+  let array = data.engagement.engagement;
+      console.log(array)
+      var output = array.map(function(obj) {
+        return Object.keys(obj).sort().map(function(key) { 
+          return obj[key];
+        });
+      });
+      console.log(output);
+
+      // for the case where
+
+      // reorder so that cookie comes first, clickCount comes second
+      output = output.map(d => {
+        temp = d[1];
+        d[1] = d[0];
+        d[0] = temp;
+        return d  
+      })
+      
+      // clean cookie format, strip away "__session="
+      output = output.map(function(d){
+          let text = d[0];
+          if( text.search('=') != -1){
+            d[0]= d[0].split("=")[1];
+
+          } else if (text.search(':') != -1){
+            d[0] = d[0].split(':')[1];
+            d[0] = d[0].match(/\"([^\"]+)"/)[1];
+          }
+          return d 
+      })
+      return output;
+}
 
 // get engagement data and visualize them
 const engagement_btn_el= document.querySelector("#engagement_btn");
@@ -409,5 +472,6 @@ function getData(currUID){
     .catch(e => reject(e))
   })
 }
+
 
 
