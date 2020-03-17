@@ -369,13 +369,13 @@ function getAllUser(currUID){
 
 function modifyGraphAccess(currUID,otherUID,graphAccess){
   let data = {'currUID':currUID, 'otherUID':otherUID, 'graphAccess':graphAccess}
-  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/graphAccess"
+  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyGraphAccess"
 
   fetch(
     endURL, 
     sendbody('POST', data)
   )
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(e => console.log(e))  
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(e => console.log(e))  
 }

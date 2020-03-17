@@ -210,13 +210,12 @@ exports.signup = functions.https.onRequest((req, res) => {
   } else {
     user = JSON.parse(req.body);
     console.log(user);
-    const promise = auth.createUserWithEmailAndPassword(
+    auth.createUserWithEmailAndPassword(
       user.emailVal,
       user.pwdVal
-    );
-    promise
-      .then(res.status(200).send("signupok"))
-      .catch(e => console.log(e.message));
+    )
+    .then((r)=>{res.status(200).send(r);return null})
+    .catch(e => console.log(e.message));
   }
 });
 
@@ -687,11 +686,12 @@ exports.modifyGraphAccess = functions.https.onRequest((req,res) => {
     //first we want to check if current user is a admin or not
     admin.auth().getUser(currUID)
     .then(r => {
-      let currAccess = r.customClaims.admin ? true : false;
+      let currAccess = r.customClaims.admin;
       admin.auth().getUser(otherUID)
       .then(r => {
-        let otherAccess = (r.customClaims.admin ? false : true) && (r.customClaims.owner? false : true); 
+        let otherAccess = (r.customClaims.admin) && (!r.customClaims.owner); 
         //if both accesses are ok
+        console.log("currA",currAccess);
         if(currAccess && otherAccess){
           admin.auth().setCustomUserClaims(otherUID,graphAccess)
           .then(() => {
@@ -705,9 +705,11 @@ exports.modifyGraphAccess = functions.https.onRequest((req,res) => {
            .catch(e=> {
              console.log(e)
              res.status(504).send(e.message);
-           });
+            });
            return null;
-          });
+          })
+          .catch(e => console.error(e))
+
         }
         else{
           res.status(500).send("Only admin can modify user account")
