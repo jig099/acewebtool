@@ -401,32 +401,3 @@ function getData(currUID){
 }
 
 
-// fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
-//     .then(response => {
-//       return response.json();
-//     })
-//     .then(data => {
-//       console.log(data);
-//       let array = data.engagement.engagement;
-//       console.log(array)
-//       var output = array.map(function(obj) {
-//         return Object.keys(obj).sort().map(function(key) { 
-//           return obj[key];
-//         });
-//       });
-//       console.log(output);
-
-
-
-
-
-
-
-// getAllAdmin(ownerUID);
-
-/*function editAccount(currUID,otherUID,updatedInfo){
-  return new Promise ((resolve.reject)=>{
-    
-    
-  });
-}*/

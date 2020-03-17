@@ -738,7 +738,7 @@ exports.modifyGraphAccess = functions.https.onRequest((req,res) => {
         //if both accesses are ok
         console.log("currA",currAccess);
         if(currAccess && otherAccess){
-          admin.auth().setCustomUserClaims(otherUID,graphAccess)
+          admin.auth().setCustomUserClaims(otherUID,{'graphAccess':graphAccess})
           .then(() => {
             admin.auth().getUser(otherUID)
             .then(userRecord => 
