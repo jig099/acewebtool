@@ -382,6 +382,7 @@ function showAdminList(){
     let table_el = document.querySelector('#admin_table')
     table_el.addEventListener('click', e => {
       let target = e.target
+      target.checked = !target.checked
 
       // deal with toggle checkbox
       if(target.tagName !== 'INPUT'){
@@ -395,10 +396,33 @@ function showAdminList(){
         let cancel_btn_el = dialog_box_el.querySelector("#cancel_btn")
 
         dialog_box_el.open = true
+        let currCheckbox = target.checked
 
         confirm_btn_el.addEventListener('click', e => {
+          // if confirmed, 1) toggle checkbox 
+          // 2) get UID of the toggled user
+          // 3) call endpoint
+          // 4) make dialog disappear
 
+          //1)
+          target.checked = !currCheckbox
+
+          //2)
+          let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim()
+
+          //3)
+          modifyAdminAccess(currUID, otherUID, target.checked)
+
+          //4)
+          dialog_box_el.open = false
         })
+
+        cancel_btn_el.addEventListener('click', e => {
+          // if cancel button is clicked, make dialog disappear
+          dialog_box_el.open = false
+        })
+
+        
       }
     })
   })
