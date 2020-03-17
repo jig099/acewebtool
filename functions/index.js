@@ -286,26 +286,49 @@ exports.getData = functions.https.onRequest((req,res) => {
         graphAccess = [true, true, true]
       }
       // get graphData according to what graphAccess one has
-      let typeList = ['browser', 'engagement', 'speed']
-      typeList = typeList.filter( (type, i)=> {
-        return graphAccess[i]
-      })
       let dataList = {}
-      typeList.forEach( type => {
-        console.log(type);
-        let docRef = db.collection('analytics').doc(type);
-        docRef.get().then(doc => {
-          if(doc.exists){
-            console.log(doc.data())
-            dataList[type] = doc.data()
-          }
-          return null;
-        }).catch( e => console.error(e.message));
-
+      
+      // get browser data if graph Access says ok
+      let docRef = db.collection('analytics').doc('browser')
+      docRef.get().then(doc => {
+        if(graphAccess[0] && doc.exists){
+          dataList['browser'] = doc.data()
+        }
+        return null
       })
-      res.set("Content-Type", "application/JSON");
-      res.status(200).send(JSON.stringify(dataList));
-      return null;
+      .then(() => {
+        // get engagement data if graphAccess is true
+        let docRef = db.collection('analytics').doc('engagement')
+        docRef.get().then(doc => {
+          if(graphAccess[1] && doc.exists){
+            dataList['engagement'] = doc.data()
+          }
+          return null
+        })
+        .catch(e => console.error(e))
+        return null
+      })
+      .then(() => {
+        // get speed data if graphAccess is true
+        let docRef = db.collection('analytics').doc('speed')
+        docRef.get()
+          .then(doc => {
+            if(graphAccess[2] && doc.exists){
+              dataList['speed'] = doc.data()
+            }
+            return null
+          })
+          .catch(e => console.error(e))
+        return null
+      })
+      .then(() => {
+        // send off the data
+        res.set("Content-Type", "application/JSON");
+        res.status(200).send(JSON.stringify(dataList));
+        return null;
+      })
+      .catch(e => console.error(e))
+      return null
     })
     .catch(e=>console.log(e));
   }
