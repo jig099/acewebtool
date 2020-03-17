@@ -232,10 +232,86 @@ let adminEmail = 'yu123456@ucsd.edu'
 let ownerUID = 'UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1'
 let adminPassword = '1234567'
 
+/*************************************************
+ * User management page functions
+ *************************************************/
+ 
+function showAdminList(){
+  getAllAdmin(currUID)
+  .then(adminList => {
+    let tr_string = ""
+    adminList.foreach(admin => {
+      let admin_li = 
+      `
+      <tr>
+        <td>
+          ${admin.uid}
+        </td>
+        <td>
+          ${admin.email}
+        </td>
+        <td>
+          ${admin.metadata.creationTime}
+        </td>
+        <td>
+          <input type="checkbox" checked>
+        </td>
+      </tr>
+      `
+      tr_string += tr_string
+    })
+
+    let table_string = 
+      `<table>
+        <thead>
+          <tr>
+            <th>
+              UID
+            </th>
+            <th>
+              Email
+            </th>
+            <th>
+              Creation time
+            </th>
+            <th>
+              Admin access
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tr_string}
+        </tbody>
+      </table>
+      `
+  })
+  let user_page_el = document.querySelector('#user_page')
+  user_page_el.innerHTML(table_string)
+}
+
+
+showAdminList
 
 
 
-/**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/************************************************
+ *            Endpoint interaction function
+ ***********************************************/
+/***
  * This is a versatile function that takes care of creation of a user account
  * @param {String} currUID owner of the request
  * @param {String} newEmail email of the new account
@@ -405,5 +481,6 @@ function getData(currUID){
     .catch(e => reject(e))
   })
 }
+
 
 
