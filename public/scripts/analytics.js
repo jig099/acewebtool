@@ -277,9 +277,6 @@ function editAccount(currUID, otherUID, modifiedAccount){
 }
 
 
-}
-
-
 
 /**
  * 
@@ -369,6 +366,44 @@ function getAllUser(currUID){
     .catch(e => reject(e.message))
   })
 }
+
+/**
+ * This 
+ * @param {string} currUID the current user's uid
+ */
+function getData(currUID){
+
+  return new Promise((resolve, reject) => {
+
+    // fetch the data from getData endpoint
+    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/getData?currUID=" + currUID
+    fetch(endPointUrl)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      console.log(data)
+      resolve(data)
+    })
+    .catch(e => reject(e))
+  })
+}
+
+
+// fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
+//     .then(response => {
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(data);
+//       let array = data.engagement.engagement;
+//       console.log(array)
+//       var output = array.map(function(obj) {
+//         return Object.keys(obj).sort().map(function(key) { 
+//           return obj[key];
+//         });
+//       });
+//       console.log(output);
 
 
 

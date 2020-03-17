@@ -266,7 +266,7 @@ exports.signout = functions.https.onRequest((req, res) => {
   }
 });
 
-exports.getdata = functions.https.onRequest((req,res) => {
+exports.getData = functions.https.onRequest((req,res) => {
   res.set("Access-Control-Allow-Origin", "https://acewebtool.firebaseapp.com");
   res.set("Access-Control-Allow-Credentials", "true");
 
@@ -277,20 +277,34 @@ exports.getdata = functions.https.onRequest((req,res) => {
     res.set("Access-Control-Max-Age", "3600");
     res.status(204).send("");
   } else {
-    let type = req.query.type;
-    console.log(type);
-    let docRef = db.collection('analytics').doc(type);
-    docRef.get().then(doc => {
-      if(doc.exists){
-        console.log(doc.data());
-        res.set("Content-Type", "application/JSON");
-        let temp = {};
-        temp[type] = doc.data();
-        res.status(200).send(JSON.stringify(temp));
+    // check which graph should fetch according to graphAccess
+    let currUID = req.query.currUID;
+    admin.auth().getUser(currUID)
+    .then(record => {
+      let graphAccess = record.customClaims.graphAccess
+      // if graphAccess is empty, that is, it is unset, initialize it to be all true
+      if(!graphAccess){
+        graphAccess = [true, true, true]
       }
-      console.log(doc.data());
-      return null;
-    }).catch( e => console.error(e.message));
+      // get graphData according to what graphAccess one has
+      let typeList = ['browser', 'engagement', 'speed']
+      typeList = typeList.filter(graphAccess)
+      let dataList = {}
+      typeList.forEach( type => {
+        console.log(type);
+        let docRef = db.collection('analytics').doc(type);
+        docRef.get().then(doc => {
+          if(doc.exists){
+            console.log(doc.data())
+            dataList[type] = doc.data()
+          }
+          return null;
+        }).catch( e => console.error(e.message));
+
+      })
+      res.set("Content-Type", "application/JSON");
+      res.status(200).send(JSON.stringify(dataList));
+    })
   }
 });
 
