@@ -10,6 +10,10 @@ const engagementSection = document.getElementById("engagement_section");
 const histogramDiv = document.getElementById("histogram");
 const piechartDiv = document.getElementById('piechart');
 const tableDiv = document.getElementById('table_div');
+const user_page_el = document.querySelector('#user_page');
+const table_el = document.querySelector('#admin_table');
+
+
 let currUID;
 
 
@@ -331,6 +335,12 @@ function showAdminList(){
         <td>
           <input type="checkbox" checked>
         </td>
+        <td>
+          <button type="button">Edit</button>
+        <td>
+        <td>
+          <button type="button">Delete</button>
+        <td> 
       </tr>
       `
       tr_string += admin_li
@@ -352,6 +362,12 @@ function showAdminList(){
             <th>
               Admin access
             </th>
+            <th>
+              Edit
+            </th>
+            <th>
+              Delete
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -359,22 +375,15 @@ function showAdminList(){
         </tbody>
       </table>
       `
-<<<<<<< HEAD
-=======
-    let user_page_el = document.querySelector('#user_page')
-    user_page_el.innerHTML = table_string
-    user_page_el.hidden = false
-
-    let table_el = document.querySelector('#admin_table')
-
->>>>>>> 6445f0cc8a0f39939285352dca64437268fba6fd
+    user_page_el.innerHTML = table_string;
+    user_page_el.hidden = false;
   })
-  let user_page_el = document.querySelector('#user_page')
+
   user_page_el.innerHTML(table_string)
 }
 
 
-showAdminList
+
 
 
 
