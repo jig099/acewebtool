@@ -5,6 +5,8 @@ const password = document.getElementById("password");
 const login = document.getElementById("loginBtn");
 const signUp = document.getElementById("signUpBtn");
 
+let currUID;
+
 function sendbody(method, body) {
   const requestOptions = {
     method: method,
@@ -401,38 +403,3 @@ function getData(currUID){
 }
 
 
-<<<<<<< HEAD
-=======
-let userUID = "AaaPBV1ZyMSgqs1LnYJAhLK41rk2"
-
-
-// fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
-//     .then(response => {
-//       return response.json();
-//     })
-//     .then(data => {
-//       console.log(data);
-//       let array = data.engagement.engagement;
-//       console.log(array)
-//       var output = array.map(function(obj) {
-//         return Object.keys(obj).sort().map(function(key) { 
-//           return obj[key];
-//         });
-//       });
-//       console.log(output);
-
-
-
-
-
-
-
-// getAllAdmin(ownerUID);
-
-/*function editAccount(currUID,otherUID,updatedInfo){
-  return new Promise ((resolve.reject)=>{
-    
-    
-  });
-}*/
->>>>>>> d9895bd37796fea16608394fd33717f7c5e7f35e
