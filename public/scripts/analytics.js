@@ -19,7 +19,9 @@ const adminAccessPopup = document.getElementById("admin_access_popup");
 const editAccountPopup = document.getElementById("edit_account_popup");
 const createAccountPopup = document.getElementById("create_account_popup");
 const deletePopup = document.getElementById("delete_popup");
-
+const browserAccess = document.getElementById("browserAccess");
+const engagementAccess = document.getElementById("engagementAccess");
+const speedAccess = document.getElementById("speedAccess");
 let currUID;
 
 
@@ -455,7 +457,7 @@ function showUserList(){
           ${user.metadata.creationTime}
         </td>
         <td>
-          <button type="button" class="userAccessControl">User Access Control</button>
+          <button type="button" class="userAccessControl" graphAccess="${JSON.stringify(user.customClaims.graphAccess)}" otherUid="${user.uid}">User Access Control</button>
         </td>
         <td>
           <button type="button" class="editUser">Edit User Info</button>
@@ -500,6 +502,7 @@ function showUserList(){
         </tbody>
       </table>
       `
+    console.log("gere");
     user_page_el.innerHTML = table_string;
     user_page_el.hidden = false;
   })
@@ -507,7 +510,11 @@ function showUserList(){
     window.getElementById("user_table").addEventListener("click",(e)=>{
       if(e.target){
         if(e.target.className === "userAccessControl"){
-          
+          let accessArray = e.target.attr('graphAccess');
+          browserAccess.value = accessArray[0];
+          engagementAccess.value = accessArray[1];
+          speedAccess.value = accessArray[2];
+          userGraphAccessPopup.open = true;
         }
         else if (e.target.className === "editUser"){
 
@@ -517,7 +524,9 @@ function showUserList(){
         }
       }
     });
+    return null;
   })
+  .catch(e=>console.log(e));
 };
 
 
