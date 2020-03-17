@@ -102,7 +102,7 @@ google.charts.load("current", { packages: ["table"] });
 // get engagement data and visualize them
 const engagement_btn_el= document.querySelector("#engagement_btn");
 engagement_btn_el.addEventListener("click", e => {
-  fetch("https://us-central1-aciewebtool.cloudfunctions.net/getdata?type=engagement")
+  fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
     .then(response => {
       return response.json();
     })
@@ -265,7 +265,7 @@ function addAccount(currUID, newEmail, newPwd){
  */
 function editAccount(currUID, otherUID, modifiedAccount){
   let data = {'currUID':currUID, 'otherUID':otherUID, 'modifiedAccount':modifiedAccount}
-  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/editAccount"
+  let endURL = "https://us-central1-acewebtool.cloudfunctions.net/modifyAdminAccess"
 
   fetch(
     endURL, 
@@ -378,4 +378,57 @@ function modifyGraphAccess(currUID,otherUID,graphAccess){
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(e => console.log(e))  
+ }
+ 
+/**
+ * This function get graph data that is allowed to be accessed by currUID.
+ * @param {string} currUID the current user's uid
+ */
+function getData(currUID){
+
+  return new Promise((resolve, reject) => {
+
+    // fetch the data from getData endpoint
+    let endPointUrl = "https://us-central1-acewebtool.cloudfunctions.net/getData?currUID=" + currUID
+    fetch(endPointUrl)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      console.log(data)
+      resolve(data)
+    })
+    .catch(e => reject(e))
+  })
 }
+
+
+// fetch("https://us-central1-acewebtool.cloudfunctions.net/getdata?type=engagement")
+//     .then(response => {
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(data);
+//       let array = data.engagement.engagement;
+//       console.log(array)
+//       var output = array.map(function(obj) {
+//         return Object.keys(obj).sort().map(function(key) { 
+//           return obj[key];
+//         });
+//       });
+//       console.log(output);
+
+
+
+
+
+
+
+// getAllAdmin(ownerUID);
+
+/*function editAccount(currUID,otherUID,updatedInfo){
+  return new Promise ((resolve.reject)=>{
+    
+    
+  });
+}*/
