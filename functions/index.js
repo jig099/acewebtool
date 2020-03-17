@@ -287,7 +287,9 @@ exports.getData = functions.https.onRequest((req,res) => {
       }
       // get graphData according to what graphAccess one has
       let typeList = ['browser', 'engagement', 'speed']
-      typeList = typeList.filter(graphAccess)
+      typeList = typeList.filter( (type, i)=> {
+        return graphAccess[i]
+      })
       let dataList = {}
       typeList.forEach( type => {
         console.log(type);
