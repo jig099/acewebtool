@@ -8,10 +8,17 @@ const speedSection = document.getElementById("speed_section");
 const browserSection = document.getElementById("browser_section");
 const engagementSection = document.getElementById("engagement_section");
 const histogramDiv = document.getElementById("histogram");
-const piechartDiv = document.getElementById("piechart");
-const tableDiv = document.getElementById("table_div");
-const user_page_el = document.querySelector("#user_page");
-const userManagementBtn = document.getElementById("userManagement");
+const piechartDiv = document.getElementById('piechart');
+const tableDiv = document.getElementById('table_div');
+const user_page_el = document.querySelector('#user_page');
+const userManagementBtn = document.getElementById('userManagement');
+
+//all the popup boxes
+const userGraphAccessPopup = document.getElementById("user_graph_access_popup");
+const adminAccessPopup = document.getElementById("admin_access_popup");
+const editAccountPopup = document.getElementById("edit_account_popup");
+const createAccountPopup = document.getElementById("create_account_popup");
+const deletePopup = document.getElementById("delete_popup");
 
 let currUID;
 
@@ -330,10 +337,10 @@ function showAdminList() {
           <input type="checkbox" checked>
         </td>
         <td>
-          <button type="button">Edit</button>
+          <button type="button" class="admin_edit_btn">Edit</button>
         </td>
         <td>
-          <button type="button">Delete</button>
+          <button type="button" class="admin_delete_btn">Delete</button>
         </td> 
       </tr>
       `;
@@ -378,9 +385,7 @@ function showAdminList() {
       target.checked = !target.checked;
 
       // deal with toggle checkbox
-      if (target.tagName !== "INPUT") {
-        return;
-      } else {
+      if (target.tagName === "INPUT") {
         let dialog_box_el = document.querySelector("#admin_access_popup");
         let confirm_btn_el = dialog_box_el.querySelector("#aa_confirm_btn");
         let cancel_btn_el = dialog_box_el.querySelector("#aa_cancel_btn");
@@ -411,6 +416,39 @@ function showAdminList() {
           // if cancel button is clicked, make dialog disappear
           dialog_box_el.open = false;
         });
+
+        // if edit button is clicked, open popup
+      } else if(target.className === 'admin_edit_btn'){
+
+        // copy email value from the table
+        let ea_email_el = editAccountPopup.getElementById('ea_email')
+        let ea_password_el = editAccountPopup.getElementById('ea_password')
+        ea_email_el.value = target.parentElement.parentElement.firstElementChild.nextElementSibling.textContent.trim()
+        editAccountPopup.open = true
+
+        const ea_confirm_btn_el = document.getElementById("ea_confirm_btn")
+        const ea_cancel_btn_el = document.getElementById('ea_cancel_btn')
+
+        ea_confirm_btn_el.addEventListener('click', e => {
+          //1) get account info
+          //2) get other uid
+          //3) send to endpoint
+          //4) update table
+          //5) make dialog disappear 
+
+          //1)
+          let userEmail = ea_email_el.value
+          let userPassword = ea_password_el.value
+          //2)
+          let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
+          //3)
+          editAccount(currUID, otherUID, {'email':userEmail, 'password':userPassword})
+          //4)
+          target.parentElement.parentElement
+            .firstElementChild.nextElementSibling.innerText = userEmail
+          //5)
+          editAccountPopup.open = false
+        })
       }
     });
   });
