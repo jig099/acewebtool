@@ -150,6 +150,7 @@ logout.addEventListener("click", e => {
       histogramDiv.innerHTML = "";
       piechartDiv.innerHTML = "";
       tableDiv.innerHTML = "";
+      user_page_el.innerHTML="";
     })
     .catch(error => console.log("error", error));
 });
