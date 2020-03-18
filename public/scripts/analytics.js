@@ -156,7 +156,8 @@ logout.addEventListener("click", e => {
       tableDiv.innerHTML = "";
 
       document.getElementById('admin_table').hidden=true;
-      document.getElementById('admin_table').hidden=true;
+      document.getElementById('user_table').hidden=true;
+
       document.getElementById("tbody").innerHTML="";
       document.getElementById("tbody2").innerHTML="";
       
@@ -332,7 +333,7 @@ add_btn.id="addUser"
 add_btn.addEventListener('click',e=>{
   createAccountPopup.open=true;
 })
-document.getElementById('user_table').insertAdjacentElement('afterend',add_btn);
+document.getElementById('admin_table').insertAdjacentElement('afterend',add_btn);
 
 let add_btn2 = document.createElement('button');
 add_btn2.innerText = "Add User"
