@@ -303,11 +303,16 @@ function showAdminList() {
       `;
     let user_page_el = document.querySelector("#user_page");
     let add_btn = document.createElement('button');
-    add_btn.innerHTML = "Add User"
-    user_page_el.innerHTML = table_string;
-    user_page_el.appendChild(add_btn);
-    user_page_el.hidden = false;
+    
+    add_btn.innerText = "Add User"
+    add_btn.id="addUser"
+    add_btn.addEventListener('click',e=>{
+      createAccountPopup.open=true;
+    })
 
+    user_page_el.innerHTML = table_string;
+    user_page_el.hidden = false;
+    document.getElementById('tbody').insertAdjacentElement('beforeend',add_btn);
     let table_el = document.querySelector("#admin_table");
     table_el.addEventListener("click", e => {
       let target = e.target;
@@ -401,47 +406,46 @@ function showAdminList() {
         })
 
 
-      }
-      document.getElementById('addUser').addEventListener('click',e=>{
-        createAccountPopup.open=true;
-      })
-      document.getElementById('ca_confirm_btn').addEventListener('click',e=>{
-        
-        let email = document.getElementById('ca_email').value;
-        let password = document.getElementById('ca_password').value;
-        addAccount(currUID,email,password)
-        .then((data)=>data.json)
-        .then((user)=>{
-          let new_user_li = `
-            <tr>
-              <td>
-                ${user.uid}
-              </td>
-              <td>
-                ${user.email}
-              </td>
-              <td>
-                ${user.metadata.creationTime}
-              </td>
-              <td>
-                <input type="checkbox" checked>
-              </td>
-              <td>
-                <button type="button" class="admin_edit_btn">Edit</button>
-              </td>
-              <td>
-                <button type="button" class="admin_delete_btn">Delete</button>
-              </td> 
-            </tr>
-            `;
-            document.getElementById('tbody').insertAdjacentHTML('beforeend',new_user_li);
-          })
 
-      })
+      }
+      
 
     });
   });
 }
+
+document.getElementById('ca_confirm_btn').addEventListener('click',e=>{
+  let email = document.getElementById('ca_email').value;
+  let password = document.getElementById('ca_password').value;
+  addAccount(currUID,email,password)
+  .then((data)=>data.json)
+  .then((user)=>{
+    let new_user_li = `
+      <tr>
+        <td>
+          ${user.uid}
+        </td>
+        <td>
+          ${user.email}
+        </td>
+        <td>
+          ${user.metadata.creationTime}
+        </td>
+        <td>
+          <input type="checkbox" checked>
+        </td>
+        <td>
+          <button type="button" class="admin_edit_btn">Edit</button>
+        </td>
+        <td>
+          <button type="button" class="admin_delete_btn">Delete</button>
+        </td> 
+      </tr>
+      `;
+      document.getElementById('tbody').insertAdjacentHTML('beforeend',new_user_li);
+    })
+})
+
 
 function showUserList() {
   getAllUser(currUID)
