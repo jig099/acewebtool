@@ -95,11 +95,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
-<<<<<<< HEAD
-  //  showAdminList();
-=======
   showAdminList();
->>>>>>> 84c907c450c139dfbb0aed263553a9bd0ad74747
   showUserList();
   getData(currUID)
     .then(data => {
