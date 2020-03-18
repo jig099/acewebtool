@@ -34,7 +34,11 @@ b{
     display:flex;
     flex-grow:1;
     width:100%
+}
 
+#admin_table{
+    margin-left:auto;
+    margin-right:auto
 }
 
 #histogram{
@@ -50,7 +54,6 @@ b{
 dialog{
     position:absolute;
     top:30%;
-    left: 30%;
     z-index:1000;
 }
 
@@ -63,6 +66,14 @@ dialog{
     z-index: 999;
     opacity: 0.8;
     background-color: gray;
+}
 
+#main_title{
+    text-align:center;
+    font-size:40px;
+}
+
+hr{
+    margin-top:60px;
 }
 

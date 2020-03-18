@@ -13,6 +13,7 @@ const tableDiv = document.getElementById('table_div');
 const user_page_el = document.querySelector('#user_page');
 const userManagementBtn = document.getElementById('userManagement');
 const body_el = document.querySelector('body');
+const main_title_el = document.getElementById('main_title')
 
 //all the popup boxes
 const userGraphAccessPopup = document.getElementById("user_graph_access_popup");
@@ -109,6 +110,8 @@ function showAnalytic() {
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
   console.log("iamhere");
+
+  main_title_el.hidden = false;
   showAdminList();
   showUserList();
   getData(currUID)
@@ -269,7 +272,10 @@ let ownerUID = "UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1";
 let adminPassword = "1234567";
 
 //header for admin table 
-let table_string = `<table id="admin_table" class="pure-table" hidden>
+let table_string = 
+`
+<h2> User Management </h2>
+<table id="admin_table" class="pure-table" hidden>
         <thead>
           <tr>
             <th>
@@ -323,6 +329,7 @@ let table_string2 = `<table id="user_table" class="pure-table" hidden>
       <tbody id="tbody2">
       </tbody>
       </table>
+      <hr></hr>
 `
 user_page_el.innerHTML = table_string;
 user_page_el.insertAdjacentHTML('beforeend',table_string2);
@@ -332,6 +339,7 @@ add_btn.innerText = "Add User"
 add_btn.id="addUser"
 add_btn.addEventListener('click',e=>{
   createAccountPopup.open=true;
+  blockDiv_el.hidden = false 
 })
 document.getElementById('admin_table').insertAdjacentElement('afterend',add_btn);
 
@@ -340,6 +348,9 @@ add_btn2.innerText = "Add User"
 add_btn2.id="addUser"
 add_btn2.addEventListener('click',e=>{
   createAccountPopup.open=true;
+  blockDiv_el.hidden = false 
+
+
 })
 document.getElementById('user_table').insertAdjacentElement('afterend',add_btn2);
 /*************************************************
@@ -389,6 +400,7 @@ document.querySelector("#admin_table").addEventListener("click", e => {
   // deal with toggle checkbox
   if (target.tagName === "INPUT") {
     admin_access_popup_el.open = true;
+    blockDiv_el.hidden = false 
     let currCheckbox = target.checked;
 
     confirm_btn_el.addEventListener("click", e => {
@@ -407,19 +419,22 @@ document.querySelector("#admin_table").addEventListener("click", e => {
 
       //4)
       admin_access_popup_el.open = false;
+      blockDiv_el.hidden = true; 
     });
 
     cancel_btn_el.addEventListener("click", e => {
       // if cancel button is clicked, make dialog disappear
       admin_access_popup_el.open = false;
+      blockDiv_el.hidden = true; 
     });
 
     // if edit button is clicked, open popup
-  } else if (target.className === 'admin_edit_btn') {
+  } else if (target.className.split(" ")[0] === 'admin_edit_btn') {
 
     // copy email value from the table
     ea_email_el.value = target.parentElement.parentElement.firstElementChild.nextElementSibling.textContent.trim()
     editAccountPopup.open = true
+    blockDiv_el.hidden = false
 
     ea_confirm_btn_el.addEventListener('click', e => {
       //1) get account info
@@ -440,13 +455,16 @@ document.querySelector("#admin_table").addEventListener("click", e => {
         .firstElementChild.nextElementSibling.innerText = userEmail
       //5)
       editAccountPopup.open = false
+      blockDiv_el.hidden = true
     })
     ea_cancel_btn_el.addEventListener('click', e => {
       editAccountPopup.open = false
+      blockDiv_el.hidden = true
     })
 
-  } else if (target.className === 'admin_delete_btn') {
+  } else if (target.className.split(" ")[0] === 'admin_delete_btn') {
     deletePopup.open = true
+    blockDiv_el.hidden = false
   
     d_confirm_btn_el.addEventListener('click', e => {
       // remove the list 
@@ -454,10 +472,12 @@ document.querySelector("#admin_table").addEventListener("click", e => {
       target.parentElement.parentElement.remove()
       deleteAccount(currUID, otherUID)
       deletePopup.open = false
+      blockDiv_el.hidden = true
     })
 
     d_cancel_btn_el.addEventListener('click', e => {
       deletePopup.open = false
+      blockDiv_el.hidden = true
     })
 
   }
@@ -525,12 +545,14 @@ document.getElementById('ca_confirm_btn').addEventListener('click',e=>{
         document.getElementById('tbody2').insertAdjacentHTML('beforeend',new_user_li2);
       }
       createAccountPopup.open=false;
+      blockDiv_el.hidden = true
     })
 })
 
 //cancel button for createaccount
 document.getElementById('ca_cancel_btn').addEventListener('click',e=>{
   createAccountPopup.open=false;
+  blockDiv_el.hidden = true
 })
 
 function showUserList() {
@@ -587,6 +609,7 @@ if (e.target) {
     engagementAccess.checked = (dataGraphAccess[1] === 'true');
     speedAccess.checked = (dataGraphAccess[2] === 'true');
     userGraphAccessPopup.open = true;
+    blockDiv_el.hidden = false; 
 
     uga_confirm_btn.addEventListener('click', e => {
       let data = [];
@@ -597,16 +620,19 @@ if (e.target) {
       console.log('Data is ', data)
       modifyGraphAccess(currUID, otherUID, data);
       userGraphAccessPopup.open = false;
+      blockDiv_el.hidden = true; 
 
     })
     uga_cancel_btn.addEventListener('click', e => {
       userGraphAccessPopup.open = false;
+      blockDiv_el.hidden = true; 
     })
   }
-  else if (e.target.className === "editUser") {
+  else if (e.target.className.split(" ")[0] === "editUser") {
     // copy email value from the table
     ea_email_el.value = target.parentElement.parentElement.firstElementChild.nextElementSibling.textContent.trim()
     editAccountPopup.open = true
+    blockDiv_el.hidden = false; 
 
     ea_confirm_btn_el.addEventListener('click', e => {
       //1) get account info
@@ -627,14 +653,18 @@ if (e.target) {
         .firstElementChild.nextElementSibling.innerText = userEmail
       //5)
       editAccountPopup.open = false
+      blockDiv_el.hidden = true; 
     })
 
     ea_cancel_btn_el.addEventListener('click', e => {
       editAccountPopup.open = false
+      blockDiv_el.hidden = true; 
     })
 
-  } else if (e.target.className === "deleteUser") {
+  } else if (e.target.className.split(" ")[0] === "deleteUser") {
     deletePopup.open = true
+    blockDiv_el.hidden = false; 
+
 
     d_confirm_btn_el.addEventListener('click', e => {
       // remove the list 
@@ -643,10 +673,12 @@ if (e.target) {
       target.parentElement.parentElement.remove()
       deleteAccount(currUID, otherUID)
       deletePopup.open = false
+      blockDiv_el.hidden = true; 
     })
 
     d_cancel_btn_el.addEventListener('click', e => {
       deletePopup.open = false
+      blockDiv_el.hidden = true; 
     })
   }
 }
