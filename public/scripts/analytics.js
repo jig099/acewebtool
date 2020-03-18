@@ -68,7 +68,6 @@ login.addEventListener("click", e => {
           })
           .then(() => {
             showAnalytic();
-
             return null;
           })
           .catch(e => console.log(e));
@@ -107,6 +106,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+  console.log("iamhere");
   showAdminList();
   showUserList();
   getData(currUID)
@@ -147,10 +147,16 @@ logout.addEventListener("click", e => {
       //needs to clear data
       login_page_el.hidden = false;
       analysis_page_el.hidden = true;
+      user_page_el.hidden = true;
+      
       histogramDiv.innerHTML = "";
       piechartDiv.innerHTML = "";
       tableDiv.innerHTML = "";
-      user_page_el.innerHTML="";
+
+      document.getElementById("tbody").innerHTML="";
+      document.getElementById("tbody2").innerHTML="";
+      
+      
     })
     .catch(error => console.log("error", error));
 });
