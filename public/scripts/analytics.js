@@ -95,7 +95,11 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+<<<<<<< HEAD
   //  showAdminList();
+=======
+  showAdminList();
+>>>>>>> 84c907c450c139dfbb0aed263553a9bd0ad74747
   showUserList();
   getData(currUID)
     .then(data => {
@@ -296,13 +300,17 @@ function showAdminList() {
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody">
           ${tr_string}
         </tbody>
       </table>
       `;
     let user_page_el = document.querySelector("#user_page");
+    let add_btn = document.createElement('button');
+    add_btn.setAttribute('value','Add User');
+    add_btn.setAttribute('id','addUser');
     user_page_el.innerHTML = table_string;
+    user_page_el.appendChild(add_btn);
     user_page_el.hidden = false;
 
     let table_el = document.querySelector("#admin_table");
@@ -330,7 +338,6 @@ function showAdminList() {
 
           //2)
           let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
-
           //3)
           modifyAdminAccess(currUID, otherUID, target.checked);
 
@@ -400,6 +407,42 @@ function showAdminList() {
 
 
       }
+      document.getElementById('addUser').addEventListener('click',e=>{
+        createAccountPopup.open=true;
+      })
+      document.getElementById('ca_confirm_btn').addEventListener('click',e=>{
+        
+        let email = document.getElementById('ca_email').value;
+        let password = document.getElementById('ca_password').value;
+        addAccount(currUID,email,password)
+        .then((data)=>data.json)
+        .then((user)=>{
+          let new_user_li = `
+            <tr>
+              <td>
+                ${user.uid}
+              </td>
+              <td>
+                ${user.email}
+              </td>
+              <td>
+                ${user.metadata.creationTime}
+              </td>
+              <td>
+                <input type="checkbox" checked>
+              </td>
+              <td>
+                <button type="button" class="admin_edit_btn">Edit</button>
+              </td>
+              <td>
+                <button type="button" class="admin_delete_btn">Delete</button>
+              </td> 
+            </tr>
+            `;
+            document.getElementById('tbody').insertAdjacentHTML('beforeend',new_user_li);
+          })
+
+      })
 
     });
   });
