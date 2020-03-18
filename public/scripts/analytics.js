@@ -155,6 +155,8 @@ logout.addEventListener("click", e => {
       piechartDiv.innerHTML = "";
       tableDiv.innerHTML = "";
 
+      document.getElementById('admin_table').hidden=true;
+      document.getElementById('admin_table').hidden=true;
       document.getElementById("tbody").innerHTML="";
       document.getElementById("tbody2").innerHTML="";
       
@@ -330,7 +332,7 @@ add_btn.id="addUser"
 add_btn.addEventListener('click',e=>{
   createAccountPopup.open=true;
 })
-document.getElementById('tbody').insertAdjacentElement('afterend',add_btn);
+document.getElementById('user_table').insertAdjacentElement('afterend',add_btn);
 
 let add_btn2 = document.createElement('button');
 add_btn2.innerText = "Add User"
@@ -338,7 +340,7 @@ add_btn2.id="addUser"
 add_btn2.addEventListener('click',e=>{
   createAccountPopup.open=true;
 })
-document.getElementById('tbody2').insertAdjacentElement('afterend',add_btn2);
+document.getElementById('user_table').insertAdjacentElement('afterend',add_btn2);
 /*************************************************
  * User management page functions
  *************************************************/
@@ -373,7 +375,6 @@ function showAdminList() {
     });
 
     document.getElementById('tbody').insertAdjacentHTML('afterbegin',tr_string);
-   
     document.getElementById('admin_table').hidden=false;
     user_page_el.hidden = false;
   });
