@@ -318,6 +318,21 @@ let table_string2 = `<table id="user_table" hidden>
 user_page_el.innerHTML = table_string;
 user_page_el.insertAdjacentHTML('beforeend',table_string2);
 
+let add_btn = document.createElement('button');
+add_btn.innerText = "Add User"
+add_btn.id="addUser"
+add_btn.addEventListener('click',e=>{
+  createAccountPopup.open=true;
+})
+document.getElementById('tbody').insertAdjacentElement('afterend',add_btn);
+
+let add_btn2 = document.createElement('button');
+add_btn2.innerText = "Add User"
+add_btn2.id="addUser"
+add_btn2.addEventListener('click',e=>{
+  createAccountPopup.open=true;
+})
+document.getElementById('tbody2').insertAdjacentElement('afterend',add_btn2);
 /*************************************************
  * User management page functions
  *************************************************/
@@ -351,15 +366,8 @@ function showAdminList() {
       tr_string += admin_li;
     });
 
-    let add_btn = document.createElement('button');
-    add_btn.innerText = "Add User"
-    add_btn.id="addUser"
-    add_btn.addEventListener('click',e=>{
-      createAccountPopup.open=true;
-    })
-    
     document.getElementById('tbody').insertAdjacentHTML('afterbegin',tr_string);
-    document.getElementById('tbody').insertAdjacentElement('afterend',add_btn);
+   
     document.getElementById('admin_table').hidden=false;
     user_page_el.hidden = false;
   });
@@ -553,15 +561,7 @@ function showUserList() {
       `;
         tr_string2 += user_li;
       });
-
-      let add_btn = document.createElement('button');
-      add_btn.innerText = "Add User"
-      add_btn.id="addUser"
-      add_btn.addEventListener('click',e=>{
-        createAccountPopup.open=true;
-      })
       document.getElementById('tbody2').insertAdjacentHTML('afterbegin',tr_string2);
-      document.getElementById('tbody2').insertAdjacentElement('afterend',add_btn);
       document.getElementById('user_table').hidden=false;
       user_page_el.hidden = false;
     })
