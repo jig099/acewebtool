@@ -5,6 +5,8 @@
         <title>login</title>
     </head>
     <body id="id_body">
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+        <link rel="stylesheet" href="./styles/analytics.css">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
     
@@ -15,12 +17,23 @@
         <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-functions.js"></script>
 
         <div id='login_page'>
-            <ul> 
-                <li><input id="email" class="textarea" type="email" placeholder="email"></li>
-                <li><input id="password" class="textarea" type="password" placeholder="password"></li>
-                <li><button id ="loginBtn" class="custom_button">Login</button></li>
-                <li><button id="signUpBtn" class="custom_button">SignUp</button></li>
-            </ul> 
+            <iframe action="about:blank" name='frame'></iframe>
+            <h1><b>A</b>cewebtool <b>A</b>nalytic <b>S</b>ystem</h1>
+            <form target="frame" class="pure-form pure-form-stacked">
+                <div class="pure-control-group">
+                    <label>Email
+                        <input id="email" class="textarea" type="email" placeholder="email">
+                    </label>
+                </div>
+                <div class="pure-control-group">
+                    <label> Password
+                            <input id="password" class="textarea" type="password" placeholder="password">
+
+                    </label>
+                </div>
+                <button id ="loginBtn" class="pure-button pure-button-primary">Login</button>
+                <button id="signUpBtn" class="pure-button pure-button-primary">SignUp</button>
+            </form>
         </div>
 
         <button id="userManagement" hidden>user Management</button>
