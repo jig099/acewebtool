@@ -70,7 +70,6 @@ login.addEventListener("click", e => {
           })
           .then(() => {
             showAnalytic();
-
             return null;
           })
           .catch(e => console.log(e));
@@ -109,6 +108,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
+  console.log("iamhere");
   showAdminList();
   showUserList();
   getData(currUID)
@@ -149,9 +149,16 @@ logout.addEventListener("click", e => {
       //needs to clear data
       login_page_el.hidden = false;
       analysis_page_el.hidden = true;
+      user_page_el.hidden = true;
+      
       histogramDiv.innerHTML = "";
       piechartDiv.innerHTML = "";
       tableDiv.innerHTML = "";
+
+      document.getElementById("tbody").innerHTML="";
+      document.getElementById("tbody2").innerHTML="";
+      
+      
     })
     .catch(error => console.log("error", error));
 });
@@ -317,6 +324,21 @@ let table_string2 = `<table id="user_table" class="pure-table" hidden>
 user_page_el.innerHTML = table_string;
 user_page_el.insertAdjacentHTML('beforeend',table_string2);
 
+let add_btn = document.createElement('button');
+add_btn.innerText = "Add User"
+add_btn.id="addUser"
+add_btn.addEventListener('click',e=>{
+  createAccountPopup.open=true;
+})
+document.getElementById('tbody').insertAdjacentElement('afterend',add_btn);
+
+let add_btn2 = document.createElement('button');
+add_btn2.innerText = "Add User"
+add_btn2.id="addUser"
+add_btn2.addEventListener('click',e=>{
+  createAccountPopup.open=true;
+})
+document.getElementById('tbody2').insertAdjacentElement('afterend',add_btn2);
 /*************************************************
  * User management page functions
  *************************************************/
@@ -350,16 +372,8 @@ function showAdminList() {
       tr_string += admin_li;
     });
 
-    let add_btn = document.createElement('button');
-    add_btn.innerText = "Add User"
-    add_btn.id="addUser"
-    add_btn.addEventListener('click',e=>{
-      createAccountPopup.open=true;
-      blockDiv_el.hidden = false
-    })
-    
     document.getElementById('tbody').insertAdjacentHTML('afterbegin',tr_string);
-    document.getElementById('tbody').insertAdjacentElement('afterend',add_btn);
+   
     document.getElementById('admin_table').hidden=false;
     user_page_el.hidden = false;
   });
@@ -553,15 +567,7 @@ function showUserList() {
       `;
         tr_string2 += user_li;
       });
-
-      let add_btn = document.createElement('button');
-      add_btn.innerText = "Add User"
-      add_btn.id="addUser"
-      add_btn.addEventListener('click',e=>{
-        createAccountPopup.open=true;
-      })
       document.getElementById('tbody2').insertAdjacentHTML('afterbegin',tr_string2);
-      document.getElementById('tbody2').insertAdjacentElement('afterend',add_btn);
       document.getElementById('user_table').hidden=false;
       user_page_el.hidden = false;
     })
