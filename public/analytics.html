@@ -2,11 +2,13 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <script src="https://kit.fontawesome.com/08c9ce5eb7.js" crossorigin="anonymous"></script>
         <title>login</title>
-    </head>
-    <body id="id_body">
         <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
         <link rel="stylesheet" href="./styles/analytics.css">
+
+    </head>
+    <body id="id_body">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
     
@@ -42,13 +44,15 @@
 
         <div id='analysis_page' hidden>
            
-            <section id="speed_section" hidden>
-                <div id="histogram"></div>
-            </section>
+            <div id="chart_container">
+                <section id="speed_section" hidden>
+                    <div id="histogram"></div>
+                </section>
 
-            <section id="browser_section" hidden>
-                <div id="piechart" ></div>
-            </section>
+                <section id="browser_section" hidden>
+                    <div id="piechart" ></div>
+                </section>
+            </div>
 
             <section id="engagement_section" hidden>
                 <div id="table_div"></div>
@@ -112,6 +116,7 @@
             <button id="d_confirm_btn">Confirm</button>
             <button id="d_cancel_btn">Cancel</button>
         </dialog>
+        <div id="blockDiv" hidden></div>
         <script src="./scripts/analytics.js"> </script>
     </body>
 </html>

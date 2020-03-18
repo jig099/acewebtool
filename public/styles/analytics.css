@@ -29,3 +29,40 @@ label{
 b{
     font-size:40px;
 }
+
+#chart_container{
+    display:flex;
+    flex-grow:1;
+    width:100%
+
+}
+
+#histogram{
+    width:700px;
+    height:500px;
+}
+
+#piechart{
+    width:700px;
+    height:500px;
+}
+
+dialog{
+    position:absolute;
+    top:30%;
+    left: 30%;
+    z-index:1000;
+}
+
+#blockDiv{
+    height:100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    opacity: 0.8;
+    background-color: gray;
+
+}
+

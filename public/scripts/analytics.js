@@ -12,6 +12,7 @@ const piechartDiv = document.getElementById('piechart');
 const tableDiv = document.getElementById('table_div');
 const user_page_el = document.querySelector('#user_page');
 const userManagementBtn = document.getElementById('userManagement');
+const body_el = document.querySelector('body');
 
 //all the popup boxes
 const userGraphAccessPopup = document.getElementById("user_graph_access_popup");
@@ -33,6 +34,7 @@ const d_confirm_btn_el = document.getElementById('d_confirm_btn')
 const d_cancel_btn_el = document.getElementById('d_cancel_btn')
 const uga_cancel_btn =  document.getElementById('uga_cancel_btn')
 const uga_confirm_btn = document.getElementById('uga_confirm_btn')
+const blockDiv_el = document.getElementById('blockDiv')
 
 
 let currUID;
@@ -208,7 +210,9 @@ function drawChart(data) {
   ]);
 
   var options = {
-    title: "Browser"
+    title: "Browser",
+    width:'700',
+    height:'500'
   };
 
   var chart = new google.visualization.PieChart(
@@ -223,7 +227,9 @@ function drawHist(data) {
   let d = google.visualization.arrayToDataTable(pre_d);
   var options = {
     title: "Speed histogram",
-    legend: { position: "none" }
+    legend: { position: "none" }, 
+    width:'700',
+    height:'500'
   };
 
   var chart = new google.visualization.Histogram(
@@ -238,7 +244,7 @@ function drawTable(d) {
 
   data.addColumn("string", "Cookie");
   data.addColumn("number", "Click Count");
-  data.addColumn("number", "Visit Duration(s)");
+  data.addColumn("number", "Visit Duration(ms)");
   data.addRows(d);
   console.log(typeof d);
   var table = new google.visualization.Table(
@@ -253,7 +259,7 @@ let ownerUID = "UEFMvCcQ9Wd0n3E2hxDuI0LYxqu1";
 let adminPassword = "1234567";
 
 //header for admin table 
-let table_string = `<table id="admin_table" hidden>
+let table_string = `<table id="admin_table" class="pure-table" hidden>
         <thead>
           <tr>
             <th>
@@ -281,7 +287,7 @@ let table_string = `<table id="admin_table" hidden>
       </table>
       `;
 
-let table_string2 = `<table id="user_table" hidden>
+let table_string2 = `<table id="user_table" class="pure-table" hidden>
       <thead>
         <tr>
           <th>
@@ -334,10 +340,10 @@ function showAdminList() {
           <input type="checkbox" checked>
         </td>
         <td>
-          <button type="button" class="admin_edit_btn">Edit</button>
+          <button type="button" class="admin_edit_btn pure-button"> <i class="fas fa-feather"></i>Edit</button>
         </td>
         <td>
-          <button type="button" class="admin_delete_btn">Delete</button>
+          <button type="button" class="admin_delete_btn pure-button"> <i class="fas fa-user-minus"></i>Delete</button>
         </td> 
       </tr>
       `;
@@ -349,6 +355,7 @@ function showAdminList() {
     add_btn.id="addUser"
     add_btn.addEventListener('click',e=>{
       createAccountPopup.open=true;
+      blockDiv_el.hidden = false
     })
     
     document.getElementById('tbody').insertAdjacentHTML('afterbegin',tr_string);
@@ -463,10 +470,10 @@ document.getElementById('ca_confirm_btn').addEventListener('click',e=>{
           <input type="checkbox" unchecked>
         </td>
         <td>
-          <button type="button" class="admin_edit_btn">Edit</button>
+          <button type="button" class="admin_edit_btn pure-button">  <i class="fas fa-feather"></i>Edit</button>
         </td>
         <td>
-          <button type="button" class="admin_delete_btn">Delete</button>
+          <button type="button" class="admin_delete_btn pure-button"> <i class="fas fa-user-minus"></i>Delete</button>
         </td> 
       </tr>
       `;
@@ -633,7 +640,6 @@ if (e.target) {
       deletePopup.open = false
     })
   }
-
 }
 });
 
