@@ -434,21 +434,22 @@ exports.addAccount = functions.https.onRequest((req, res) => {
     console.log("userProp is", userProp);
 
     admin.auth().getUser(currUID).then(userRecord => {
-      let ownerId = userRecord.customClaims.owner
-      let adminId = userRecord.customClaims.admin
+      let isOwner = userRecord.customClaims.owner;
+      let isAdmin= userRecord.customClaims.admin;
 
       // if the current user is not a owner nor a admin, block request
-      if (!ownerId && !adminId){
+      if (!isOwner && !isAdmin){
           res.status(504).send("Only owner/admin can add users");
-
-      } else {
-
+      } 
+      else {
         admin.auth().createUser(userProp)
         .then( r => {
           console.log("user record is ", r);
           let createdAccount = {};
           createdAccount.uid = r.uid;
           createdAccount.email = r.email;
+          createdAccount.creationTime =r.metadata.creationTime;
+          
           return createdAccount;
         })
         .then(newAcc => {res.status(200).send(JSON.stringify(newAcc));return null})
