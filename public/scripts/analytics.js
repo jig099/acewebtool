@@ -44,7 +44,7 @@ login.addEventListener("click", e => {
     "https://us-central1-acewebtool.cloudfunctions.net/login",
     sendbody("POST", user)
   )
-    .then(function(response) {
+    .then(function (response) {
       if (response.ok) {
         console.log("login success, redirecting...");
         console.log(response);
@@ -56,7 +56,7 @@ login.addEventListener("click", e => {
           })
           .then(() => {
             showAnalytic();
-            
+
             return null;
           })
           .catch(e => console.log(e));
@@ -95,7 +95,7 @@ function showAnalytic() {
   let analysis_page_el = document.querySelector("#analysis_page");
   login_page_el.hidden = true;
   analysis_page_el.hidden = false;
-//  showAdminList();
+  //  showAdminList();
   showUserList();
   getData(currUID)
     .then(data => {
@@ -146,10 +146,10 @@ logout.addEventListener("click", e => {
 function processData(data) {
   let array = data.engagement;
   console.log(array);
-  var output = array.map(function(obj) {
+  var output = array.map(function (obj) {
     return Object.keys(obj)
       .sort()
-      .map(function(key) {
+      .map(function (key) {
         return obj[key];
       });
   });
@@ -166,7 +166,7 @@ function processData(data) {
   });
 
   // clean cookie format, strip away "__session="
-  output = output.map(function(d) {
+  output = output.map(function (d) {
     let text = d[0];
     if (text.search("=") != -1) {
       d[0] = d[0].split("=")[1];
@@ -344,7 +344,7 @@ function showAdminList() {
         });
 
         // if edit button is clicked, open popup
-      } else if(target.className === 'admin_edit_btn'){
+      } else if (target.className === 'admin_edit_btn') {
 
         // copy email value from the table
         let ea_email_el = document.getElementById('ea_email')
@@ -368,7 +368,7 @@ function showAdminList() {
           //2)
           let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
           //3)
-          editAccount(currUID, otherUID, {'email':userEmail, 'password':userPassword})
+          editAccount(currUID, otherUID, { 'email': userEmail, 'password': userPassword })
           //4)
           target.parentElement.parentElement
             .firstElementChild.nextElementSibling.innerText = userEmail
@@ -380,7 +380,7 @@ function showAdminList() {
           editAccountPopup.open = false
         })
 
-      } else if(target.className === 'admin_delete_btn'){
+      } else if (target.className === 'admin_delete_btn') {
         deletePopup.open = true
         const d_confirm_btn_el = document.getElementById('d_confirm_btn')
         const d_cancel_btn_el = document.getElementById('d_cancel_btn')
@@ -390,7 +390,7 @@ function showAdminList() {
 
           let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
           target.parentElement.parentElement.remove()
-          deleteAccount(currUID,otherUID)
+          deleteAccount(currUID, otherUID)
           deletePopup.open = false
         })
 
@@ -411,11 +411,11 @@ function showUserList() {
       let tr_string = "";
       userList.forEach(user => {
         let accessArray;
-        if(user.customClaims){
+        if (user.customClaims) {
           accessArray = user.customClaims.graphAccess;
         }
-        else{
-          accessArray=null;
+        else {
+          accessArray = [true, true, true];
         }
         let user_li = `
       <tr>
@@ -470,55 +470,98 @@ function showUserList() {
         </tbody>
       </table>
       `
-    console.log("here");
-    user_page_el.innerHTML = table_string;
-    user_page_el.hidden = false;
-    return null;
-  })
-  .then(()=>{
-    document.getElementById("user_table").addEventListener("click",(e)=>{
-      if(e.target){
-        let otherUID = e.target.getAttribute('data-otherUid');
-        if(e.target.className === "userAccessControl"){
-          if(JSON.parse(e.target.getAttribute('data-graphAccess'))!==null){
-            console.log((e.target.getAttribute('data-graphAccess')));
-            let accessArray = JSON.parse(e.target.getAttribute('data-graphAccess')); 
-            console.log("accessArray",accessArray);
-            browserAccess.value = (accessArray[0]==='true');
-            engagementAccess.value = (accessArray[1]==='true');
-            speedAccess.value = (accessArray[2]==='true');
+      console.log("here");
+      user_page_el.innerHTML = table_string;
+      user_page_el.hidden = false;
+      return null;
+    })
+    .then(() => {
+      document.getElementById("user_table").addEventListener("click", (e) => {
+        if (e.target) {
+          let target = e.target
+          let otherUID = e.target.getAttribute('data-otherUid');
+          let dataGraphAccess = e.target.getAttribute('data-graphAccess');
+          if (e.target.className === "userAccessControl") {
+            browserAccess.checked = (dataGraphAccess[0] === 'true');
+            engagementAccess.checked = (dataGraphAccess[1] === 'true');
+            speedAccess.checked = (dataGraphAccess[2] === 'true');
+            userGraphAccessPopup.open = true;
+            document.getElementById('uga_confirm_btn').addEventListener('click', e => {
+              let data = [];
+              data[0] = browserAccess.checked
+              data[1] = engagementAccess.checked
+              data[2] = speedAccess.checked
+              console.log('Data is ', data)
+              modifyGraphAccess(currUID, otherUID, data);
+              userGraphAccessPopup.open = false;
+
+            })
+            document.getElementById('uga_cancel_btn').addEventListener('click', e => {
+              userGraphAccessPopup.open = false;
+            })
           }
-          else{
-            browserAccess.value = false;
-            engagementAccess.value=false;
-            speedAccess.value=false;
+          else if (e.target.className === "editUser") {
+
+
+            // copy email value from the table
+            let ea_email_el = document.getElementById('ea_email')
+            let ea_password_el = document.getElementById('ea_password')
+            ea_email_el.value = target.parentElement.parentElement.firstElementChild.nextElementSibling.textContent.trim()
+            editAccountPopup.open = true
+
+            const ea_confirm_btn_el = document.getElementById("ea_confirm_btn")
+            const ea_cancel_btn_el = document.getElementById('ea_cancel_btn')
+
+            ea_confirm_btn_el.addEventListener('click', e => {
+              //1) get account info
+              //2) get other uid
+              //3) send to endpoint
+              //4) update table
+              //5) make dialog disappear 
+
+              //1)
+              let userEmail = ea_email_el.value
+              let userPassword = ea_password_el.value
+              //2)
+              let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
+              //3)
+              editAccount(currUID, otherUID, { 'email': userEmail, 'password': userPassword })
+              //4)
+              target.parentElement.parentElement
+                .firstElementChild.nextElementSibling.innerText = userEmail
+              //5)
+              editAccountPopup.open = false
+            })
+
+            ea_cancel_btn_el.addEventListener('click', e => {
+              editAccountPopup.open = false
+            })
+
+          } else if (e.target.className === "deleteUser") {
+            deletePopup.open = true
+            const d_confirm_btn_el = document.getElementById('d_confirm_btn')
+            const d_cancel_btn_el = document.getElementById('d_cancel_btn')
+
+            d_confirm_btn_el.addEventListener('click', e => {
+              // remove the list 
+
+              let otherUID = target.parentElement.parentElement.firstElementChild.textContent.trim();
+              target.parentElement.parentElement.remove()
+              deleteAccount(currUID, otherUID)
+              deletePopup.open = false
+            })
+
+            d_cancel_btn_el.addEventListener('click', e => {
+              deletePopup.open = false
+            })
           }
-          userGraphAccessPopup.open = true;
-          document.getElementById('uga_confirm_btn').addEventListener('click', e=>{
-            let data=[];
-            data[0] = browserAccess.value;
-            data[1] = engagementAccess.value;
-            data[2] = speedAccess.value;
-            modifyGraphAccess(currUID,otherUID,data);
-            editAccountPopup.open=false;
 
-          })
-          document.getElementById('uga_cancel_btn').addEventListener('click',e=>{
-            editAccountPopup.open=false;
-          })
         }
-        else if (e.target.className === "editUser"){
-          
-        }
-        else if(e.target.className === "deleteUser"){
-        }
+      });
+      return null;
+    })
 
-      }
-    });
-    return null;
-  })
-
-  .catch(e=>console.log(e));
+    .catch(e => console.log(e));
 };
 
 
