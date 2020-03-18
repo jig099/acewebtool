@@ -591,6 +591,7 @@ if (e.target) {
       data[0] = browserAccess.checked
       data[1] = engagementAccess.checked
       data[2] = speedAccess.checked
+      e.target.setAttribute('data-graphAccess',data);
       console.log('Data is ', data)
       modifyGraphAccess(currUID, otherUID, data);
       userGraphAccessPopup.open = false;
