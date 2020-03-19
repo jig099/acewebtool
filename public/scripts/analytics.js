@@ -527,10 +527,10 @@ document.getElementById('ca_confirm_btn').addEventListener('click',e=>{
           <button type="button" class="userAccessControl" data-otherUid="${user.uid}" data-graphAccess="[true,true,true]">Access Control</button>
         </td>
         <td>
-          <button type="button" class="editUser">Edit User Info</button>
+          <button type="button" class="editUser pure-button"><i class="fas fa-feather"></i> Edit User Info</button>
         </td>
         <td>
-          <button type="button" class="deleteUser">Delete User</button>
+          <button type="button" class="deleteUser pure-button"> <i class="fas fa-user-minus"></i> Delete User</button>
         </td> 
       </tr>
       `;
@@ -580,10 +580,10 @@ function showUserList() {
           <button type="button" class="userAccessControl" data-otherUid="${user.uid}" data-graphAccess="${JSON.stringify(accessArray)}">Access Control</button>
         </td>
         <td>
-          <button type="button" class="editUser">Edit User Info</button>
+          <button type="button" class="editUser pure-button"> <i class="fas fa-feather"></i>Edit User Info</button>
         </td>
         <td>
-          <button type="button" class="deleteUser">Delete User</button>
+          <button type="button" class="deleteUser pure-button"> <i class="fas fa-user-minus"></i>Delete User</button>
         </td> 
       </tr>
       `;
