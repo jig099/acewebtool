@@ -153,11 +153,14 @@ logout.addEventListener("click", e => {
       login_page_el.hidden = false;
       analysis_page_el.hidden = true;
       user_page_el.hidden = true;
-      
+      main_title_el.hidden = true;
+
       histogramDiv.innerHTML = "";
       piechartDiv.innerHTML = "";
       tableDiv.innerHTML = "";
 
+      document.getElementById("addUser").hidden=true;
+      document.getElementById("addUser2").hidden=true;
       document.getElementById('admin_table').hidden=true;
       document.getElementById('user_table').hidden=true;
 
@@ -331,28 +334,29 @@ let table_string2 = `<table id="user_table" class="pure-table" hidden>
       </table>
       <hr></hr>
 `
-user_page_el.innerHTML = table_string;
-user_page_el.insertAdjacentHTML('beforeend',table_string2);
+  user_page_el.innerHTML = table_string;
+  user_page_el.insertAdjacentHTML('beforeend',table_string2);
 
-let add_btn = document.createElement('button');
-add_btn.innerText = "Add User"
-add_btn.id="addUser"
-add_btn.addEventListener('click',e=>{
-  createAccountPopup.open=true;
-  blockDiv_el.hidden = false 
-})
-document.getElementById('admin_table').insertAdjacentElement('afterend',add_btn);
+  let add_btn = document.createElement('button');
+  add_btn.innerText = "Add User"
+  add_btn.id="addUser"
+  add_btn.addEventListener('click',e=>{
+    createAccountPopup.open=true;
+    blockDiv_el.hidden = false 
+  })
+  add_btn.hidden=true;
+  document.getElementById('admin_table').insertAdjacentElement('afterend',add_btn);
 
-let add_btn2 = document.createElement('button');
-add_btn2.innerText = "Add User"
-add_btn2.id="addUser"
-add_btn2.addEventListener('click',e=>{
-  createAccountPopup.open=true;
-  blockDiv_el.hidden = false 
+  let add_btn2 = document.createElement('button');
+  add_btn2.innerText = "Add User"
+  add_btn2.id="addUser2"
+  add_btn2.addEventListener('click',e=>{
+    createAccountPopup.open=true;
+    blockDiv_el.hidden = false 
+  })
+  add_btn2.hidden=true;
+  document.getElementById('user_table').insertAdjacentElement('afterend',add_btn2);
 
-
-})
-document.getElementById('user_table').insertAdjacentElement('afterend',add_btn2);
 /*************************************************
  * User management page functions
  *************************************************/
@@ -388,6 +392,7 @@ function showAdminList() {
 
     document.getElementById('tbody').insertAdjacentHTML('afterbegin',tr_string);
     document.getElementById('admin_table').hidden=false;
+    document.getElementById('addUser').hidden=false;
     user_page_el.hidden = false;
   });
 }
@@ -593,6 +598,7 @@ function showUserList() {
       });
       document.getElementById('tbody2').insertAdjacentHTML('afterbegin',tr_string2);
       document.getElementById('user_table').hidden=false;
+      document.getElementById('addUser2').hidden=false;
       user_page_el.hidden = false;
     })
     .catch(e => console.log(e));
