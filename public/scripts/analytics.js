@@ -531,7 +531,7 @@ document.getElementById('ca_confirm_btn').addEventListener('click',e=>{
           ${user.creationTime}
         </td>
         <td>
-          <button type="button" class="userAccessControl" data-otherUid="${user.uid}" data-graphAccess="[true,true,true]">Access Control</button>
+          <button type="button" class="userAccessControl pure-button" data-otherUid="${user.uid}" data-graphAccess="[true,true,true]"><i class="fas fa-users-cog"></i>Access Control</button>
         </td>
         <td>
           <button type="button" class="editUser pure-button"><i class="fas fa-feather"></i> Edit User Info</button>
@@ -584,7 +584,7 @@ function showUserList() {
           ${user.metadata.creationTime}
         </td>
         <td>
-          <button type="button" class="userAccessControl" data-otherUid="${user.uid}" data-graphAccess="${JSON.stringify(accessArray)}">Access Control</button>
+          <button type="button" class="userAccessControl pure-button" data-otherUid="${user.uid}" data-graphAccess="${JSON.stringify(accessArray)}"><i class="fas fa-users-cog"></i>Access Control</button>
         </td>
         <td>
           <button type="button" class="editUser pure-button"> <i class="fas fa-feather"></i>Edit User Info</button>
@@ -610,7 +610,7 @@ if (e.target) {
   let target = e.target
   let otherUID = e.target.getAttribute('data-otherUid');
   let dataGraphAccess = e.target.getAttribute('data-graphAccess');
-  if (e.target.className === "userAccessControl") {
+  if (e.target.className.split(" ")[0] === "userAccessControl") {
     browserAccess.checked = (dataGraphAccess[0] === 'true');
     engagementAccess.checked = (dataGraphAccess[1] === 'true');
     speedAccess.checked = (dataGraphAccess[2] === 'true');
