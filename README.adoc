@@ -7,5 +7,6 @@ The goal of this project is to implement a web analytics tool that helps enables
 * http://vanilla-js.com/ [`Vanilla Js`] for as the lightweight framework for fast DOM manipulation and code execution
 
 == Project Architecture
+* EndPoint Architecture
 image::public/pictures/endpoint-diagram.png[]
 
