@@ -8,6 +8,5 @@ The goal of this project is to implement a web analytics tool that helps enables
 
 == Project Architecture
 * End Points Structure
-* image::public/pictures/endpoint-diagram.png
+image::public/pictures/endpoint-diagram.png[]
 
-*
