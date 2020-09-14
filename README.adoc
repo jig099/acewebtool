@@ -9,4 +9,5 @@ The goal of this project is to implement a web analytics tool that helps enables
 == Project Architecture
 === Endpoint Structure
 image::public/pictures/endpoint-diagram.png[]
-
+=== App Structure
+image::public/pictures/app-diagram-1.png[]
